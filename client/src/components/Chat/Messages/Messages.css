@@ -1,0 +1,29 @@
+.messages {
+    max-height: calc(100vh - 195px);
+    padding: 10px 35px 10px 60px;
+    margin-bottom: 2px;
+    overflow: auto;
+    background-color: #fff;
+}
+.messages .message-block {
+    margin-bottom: 20px;
+}
+.messages .message-author {
+    position: relative;
+}
+.messages .message-author span {
+    color: blue;
+}
+.messages .message-avatar {
+    top: 0;
+    left: -40px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.messages .message-block--my .message-author span {
+    color: black;
+    background: bisque;
+}

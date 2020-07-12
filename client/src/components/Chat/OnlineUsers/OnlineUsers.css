@@ -1,0 +1,47 @@
+.online-users {
+    right: 15px;
+    bottom: 15px;
+    position: fixed;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.online-users__switch {
+    display: block;
+    cursor: pointer;
+}
+
+.online-users__switch__status {
+    top: -1px;
+    float: right;
+    position: relative;
+}
+
+.online-users__switch,
+.online-users__list {
+    width: 250px;
+    color: #fff;
+    padding: 10px;
+    max-width: 575px;
+    background-color: rgba(0, 0, 0, .6);
+}
+
+.online-users__list {
+    display: none;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.online-users__list_active {
+    display: block;
+}
+
+.online-users__list li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.online-users .avatar-block {
+    position: static;
+    margin-right: 10px;
+}

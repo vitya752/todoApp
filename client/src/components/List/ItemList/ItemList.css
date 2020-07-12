@@ -1,0 +1,16 @@
+.buttons-wrap button{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.doneItem .btn-done{
+    color: #ff474762;
+}
+
+svg {
+    pointer-events: none;
+}
+
+.list-group-item--custom.important {
+    background: #007bff;
+}

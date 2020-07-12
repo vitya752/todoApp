@@ -1,0 +1,24 @@
+.message-input-block {
+    bottom: 0;
+    position: sticky;
+    text-align: right;
+    background-color: #fff;
+    padding: 15px 30px 15px 80px;
+}
+.avatar-block {
+    left: 15px;
+    position: absolute;
+}
+.avatar-block img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.message-input-block textarea {
+    width: 100%;
+    resize: none;
+    outline: none;
+    padding: 5px 10px;
+    min-height: 60px;
+    border-radius: 5px;
+}
