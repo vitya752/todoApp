@@ -5,15 +5,7 @@
     background-color: #fff;
     padding: 15px 30px 15px 80px;
 }
-.avatar-block {
-    left: 15px;
-    position: absolute;
-}
-.avatar-block img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
+
 .message-input-block textarea {
     width: 100%;
     resize: none;

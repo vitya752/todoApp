@@ -19,12 +19,13 @@ const ChatContainerWrapper = (props) => {
     
 };
 
+const socket = socketIOClient('http://localhost:5000');
+
 const ChatContainer = ({ userId, avatar, messages, deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC }) => {
 
-    const socket = socketIOClient('http://localhost:5000');
-
     useEffect(() => {
-        socket.emit('pushUserToOnline', { userId });
+        
+        socket.emit('CHAT:JOIN', { userId });
 
         return () => {
             deleteUserAC(socket.id);
@@ -40,30 +41,30 @@ const ChatContainer = ({ userId, avatar, messages, deleteUserAC, setOnlineUsersA
             deleteUserAC(id);
         };
 
-        socket.on('deleteUser', deleteUser);
+        socket.on('CHAT:DELETE_USER', deleteUser);
 
         const addMess = (message) => {
             pushMessageAC(message);
         };
 
-        socket.on('addMess', addMess);
+        socket.on('CHAT:ADD_MESSAGE', addMess);
 
         const pushOnlineUsersOnClient = ({onlineUsers}) => {
             setOnlineUsersAC(onlineUsers);
         };
 
-        socket.on('pushOnlineUsersOnClient', pushOnlineUsersOnClient);
+        socket.on('CHAT:PUSH_ONLINE_USERS_ON_CLIENT', pushOnlineUsersOnClient);
 
         return () => {
-            socket.off('deleteUser', deleteUser);
-            socket.off('addMess', addMess);
-            socket.off('pushOnlineUsersOnClient', pushOnlineUsersOnClient);
+            socket.off('CHAT:DELETE_USER', deleteUser);
+            socket.off('CHAT:ADD_MESSAGE', addMess);
+            socket.off('CHAT:PUSH_ONLINE_USERS_ON_CLIENT', pushOnlineUsersOnClient);
         }
 
     }, [deleteUserAC, pushMessageAC, setOnlineUsersAC, socket]);
 
     const submitMessage = (text) => {
-        socket.emit('sendMess', { userId, text });
+        socket.emit('CHAT:SEND_MESSAGE', { userId, text });
     }
 
     return (

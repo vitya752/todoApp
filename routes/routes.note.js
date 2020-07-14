@@ -72,7 +72,7 @@ router.post('/delete', auth, async (req, res) => {
     }
 });
 
-router.post('/update', auth, async (req, res) => {
+router.patch('/update', auth, async (req, res) => {
     try {
         const {userId} = req.user;
         const {id, important, done} = req.body;

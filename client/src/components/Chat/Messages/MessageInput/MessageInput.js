@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './MessageInput.css';
+import Avatar from '../../../templates/Avatar/Avatar';
 
 const MessageInput = ({ submitMessage, avatar }) => {
 
@@ -16,11 +17,7 @@ const MessageInput = ({ submitMessage, avatar }) => {
 
     return (
         <div className="message-input-block">
-            <div className="avatar-block">
-                <img 
-                    src={avatar ? avatar : "https://instagram.inoutmkt.com.br/assets/img/no-avatar.png"} 
-                    alt="avatar"/>
-            </div>
+            <Avatar avatar={avatar} />
             <div className="text-block">
                 <textarea 
                     name="text" 

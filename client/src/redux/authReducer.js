@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 const FETCHING = 'FETCHING';
 const SET_AUTH = 'SET_AUTH';
 const SET_FIELD_AUTH_FORM = 'SET_FIELD_AUTH_FORM';
+const CLEAR_AUTH_FORM = 'CLEAR_AUTH_FORM';
 const SET_SETTINGS = 'SET_SETTINGS';
 
 const initialState = {
@@ -46,6 +47,15 @@ const reducer = (state = initialState, action) => {
                 }
             }
         }
+        case CLEAR_AUTH_FORM: {
+            return {
+                ...state,
+                form: {
+                    email: '',
+                    pass: ''
+                }
+            }
+        }
         case SET_SETTINGS: {
             return {
                 ...state,
@@ -85,6 +95,12 @@ export const setAuthFormAC = (name, value) => {
     }
 };
 
+export const clearAuthFormAC = () => {
+    return {
+        type: CLEAR_AUTH_FORM
+    };
+};
+
 export const setSettingsAC = (name, value) => {
     return {
         type: SET_SETTINGS,
@@ -104,6 +120,7 @@ export const requestLoginThunk = (email, pass) => {
                 const {userId, email, nickname, avatar, token, message} = data.data;
                 dispatch(setAuthAC({userId, nickname, avatar, email, token}));
                 dispatch(fetchingAC(false));
+                dispatch(clearAuthFormAC());
                 toast(message);
             }
         } catch(e) {
@@ -130,12 +147,12 @@ export const requestRegisterThunk = (email, pass) => {
     }
 };
 
-export const deleteAccThunk = ({token, userId}) => {
+export const deleteAccThunk = ({token}) => {
     return async dispatch => {
         try {
             dispatch(fetchingAC(true));
             const api = settingsApi(token);
-            const data = await api.deleteAcc(userId);
+            const data = await api.deleteAcc();
             if(data.statusText === 'Accepted') {
                 const {message} = data.data;
                 toast(message);
@@ -151,12 +168,12 @@ export const deleteAccThunk = ({token, userId}) => {
     };
 };
 
-export const updateSettingsThunk = ({token, userId, nickname, avatar}) => {
+export const updateSettingsThunk = ({token, nickname, avatar}) => {
     return async dispatch => {
         try {
             dispatch(fetchingAC(true));
             const api = settingsApi(token);
-            const data = await api.setSettings(userId, nickname, avatar);
+            const data = await api.setSettings(nickname, avatar);
             if(data.statusText === 'Accepted') {
                 const {message} = data.data;
                 dispatch(fetchingAC(false));

@@ -1,14 +1,12 @@
 import React from 'react';
+import Avatar from '../../../templates/Avatar/Avatar';
 
 const Message = ({ item, userId }) => {
     return (
         <div className={`message-block ${userId === item.senderId && 'message-block--my'}`}>
             <div className="message-content">
                 <div className="message-author">
-                    <img 
-                        src={item.avatar ? item.avatar : "https://instagram.inoutmkt.com.br/assets/img/no-avatar.png" }
-                        className="message-avatar"
-                        alt={item.avatar ? item.author : "no-avatar" } />
+                    <Avatar small={true} avatar={item.avatar} alt={item.author} />
                     <span>{item.author}</span>
                 </div>
                 <div className="message-text">

@@ -5,10 +5,11 @@ const auth = require('../middleware/auth.middleware');
 
 const router = Router();
 
-router.post('/update', auth, async (req, res) => {
+router.patch('/', auth, async (req, res) => {
     try {
 
-        const { userId, nickname, avatar } = req.body;
+        const { userId } = req.user;
+        const { nickname, avatar } = req.body;
         const user = await User.findOne({ _id: userId });
 
         if(!user) {
@@ -27,11 +28,10 @@ router.post('/update', auth, async (req, res) => {
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.delete('/', auth, async (req, res) => {
     try {
 
-        const { userId } = req.body;
-        console.log(userId)
+        const { userId } = req.user;
         const user = await User.findOne({ _id: userId });
 
         if(!user) {

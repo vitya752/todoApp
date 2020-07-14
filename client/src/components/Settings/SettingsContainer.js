@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Settings from './Settings';
 
-const SettingsContainer = ({ token, userId, email, nickname, avatar, setSettingsAC, updateSettingsThunk, deleteAccThunk }) => {
+const SettingsContainer = ({ token, email, nickname, avatar, setSettingsAC, updateSettingsThunk, deleteAccThunk }) => {
 
     const changeHandler = (e) => {
         setSettingsAC(e.target.name, e.target.value);
@@ -13,7 +13,6 @@ const SettingsContainer = ({ token, userId, email, nickname, avatar, setSettings
     return (
         <Settings
             token={token}
-            userId={userId}
             email={email}
             nickname={nickname}
             changeHandler={changeHandler}
@@ -26,7 +25,6 @@ const SettingsContainer = ({ token, userId, email, nickname, avatar, setSettings
 const mapStateToProps = (state) => {
     return {
         token: state.auth.token,
-        userId: state.auth.userId,
         email: state.auth.email,
         nickname: state.auth.nickname,
         avatar: state.auth.avatar

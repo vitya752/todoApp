@@ -1,11 +1,21 @@
-const { Router } = require('express');
+const socket = require('socket.io');
 
-const router = Router();
+const User = require('../models/User');
+const OnlineChatUsers = require('../models/OnlineChatUsers');
 
-module.exports = (io) => {
+module.exports = (http) => {
+
+    const io = socket(http);
+
     io.sockets.on('connection', (socket) => {
 
-        socket.on('pushUserToOnline', async (data) => {
+        socket.on('disconnect', () => {
+            if(socket.chat) {
+                deleteAndUpdateOnlineUsers();
+            }
+        });
+
+        socket.on('CHAT:JOIN', async (data) => {
             const user = await OnlineChatUsers.findOne({ userId: data.userId });
             
             if(!user) {
@@ -15,19 +25,18 @@ module.exports = (io) => {
                 });
                 await candidate.save();
             }
-    
+
+            socket.chat = true;
+            socket.join('chat');
+
             sendOnlineUsers();
-    
+
         });
-    
-        socket.on('disconnect', async () => {
-            deleteAndUpdateOnlineUsers();
-        });
-    
-        socket.on('sendMess', async (data) => {
+
+        socket.on('CHAT:SEND_MESSAGE', async (data) => {
             const user = await User.findOne({ _id: data.userId });
             if(user) {
-                io.sockets.emit('addMess', {
+                io.sockets.to('chat').emit('CHAT:ADD_MESSAGE', {
                     senderId: data.userId,
                     author: user.nickname || user.email,
                     avatar: user.avatar,
@@ -35,20 +44,18 @@ module.exports = (io) => {
                 });
             }
         });
-    
+
         const sendOnlineUsers = async () => {
             let onlineUsers = await OnlineChatUsers.find().populate('userId', 'avatar nickname');
-            io.sockets.emit('pushOnlineUsersOnClient', {onlineUsers});
+            io.to('chat').emit('CHAT:PUSH_ONLINE_USERS_ON_CLIENT', {onlineUsers});
         };
-    
+
         const deleteAndUpdateOnlineUsers = async () => {
             await OnlineChatUsers.deleteOne({ _id: socket.id });
-            io.sockets.emit('deleteUser', {id: socket.id});
+            io.to('chat').emit('CHAT:DELETE_USER', {id: socket.id});
         };
-    
+
     });
-    
-    return router;
+
+    return io;
 };
-
-

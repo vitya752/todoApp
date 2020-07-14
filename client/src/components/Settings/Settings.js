@@ -1,7 +1,7 @@
 import React from 'react';
 import InputGroup from '../templates/InputGroup/InputGroup';
 
-const Settings = ({ token, userId, email, nickname, avatar, changeHandler, updateSettingsThunk, deleteAccThunk }) => {
+const Settings = ({ token, email, nickname, avatar, changeHandler, updateSettingsThunk, deleteAccThunk }) => {
     return (
         <div className="settings mt-3">
             <ul className="list-group list-group--emptyborder" >
@@ -27,10 +27,10 @@ const Settings = ({ token, userId, email, nickname, avatar, changeHandler, updat
                         name={'avatar'} />
                 </li>
                 <li className="list-group-item">
-                    <button onClick={() => updateSettingsThunk({token, userId, nickname, avatar})} className="btn btn-primary float-right">Сохранить</button>
+                    <button onClick={() => updateSettingsThunk({token, nickname, avatar})} className="btn btn-primary float-right">Сохранить</button>
                 </li>
                 <li className="list-group-item">
-                    <button onClick={() => deleteAccThunk({token, userId})} className="btn btn-sm btn-danger">Удалить аккаунт</button>
+                    <button onClick={() => deleteAccThunk({token})} className="btn btn-sm btn-danger">Удалить аккаунт</button>
                 </li>
             </ul>             
         </div>
