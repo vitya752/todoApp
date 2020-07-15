@@ -1,11 +1,10 @@
 const Router = require('express');
 const User = require('../models/User');
 const Note = require('../models/Note');
-const auth = require('../middleware/auth.middleware');
 
 const router = Router();
 
-router.patch('/', auth, async (req, res) => {
+router.patch('/', async (req, res) => {
     try {
 
         const { userId } = req.user;
@@ -28,7 +27,7 @@ router.patch('/', auth, async (req, res) => {
     }
 });
 
-router.delete('/', auth, async (req, res) => {
+router.delete('/', async (req, res) => {
     try {
 
         const { userId } = req.user;

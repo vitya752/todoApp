@@ -14,6 +14,11 @@ const schema = new Schema({
     },
     avatar: {
         type: String
+    },
+    lastSeen: {
+        required: true,
+        default: new Date(),
+        type: Date
     }
 },
 {

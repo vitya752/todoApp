@@ -19,7 +19,7 @@ router.post('/register', reqValidator, async (req, res) => {
                 message: arr.map(item => {
                     return item.msg
                 }).join(', ')
-             });
+            });
         }
 
     
@@ -50,7 +50,7 @@ router.post('/login', loginValidator, async (req, res) => {
                 message: arr.map(item => {
                     return item.msg
                 }).join(', ')
-             });
+            });
         }
 
         const {email} = req.body;
@@ -63,7 +63,8 @@ router.post('/login', loginValidator, async (req, res) => {
             email,
             nickname: candidate.nickname,
             avatar: candidate.avatar,
-            message: 'Успешная аутентификация'
+            message: 'Успешная аутентификация',
+            lastSeen: candidate.lastSeen
         });
 
     } catch(e) {

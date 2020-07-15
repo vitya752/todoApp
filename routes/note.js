@@ -1,10 +1,9 @@
 const {Router} = require('express');
 const Note = require('../models/Note');
-const auth = require('../middleware/auth.middleware');
 
 const router = Router();
 
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const data = await Note.find({ owner: req.user.userId });
 
@@ -24,14 +23,13 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-router.post('/add', auth, async (req, res) => {
+router.post('/add', async (req, res) => {
     try {
         const {text} = req.body;
         const {userId} = req.user;
 
         if(text === '') {
-            return res.status(400).json({ message: 'Напишите какой-то текст!'
-            });
+            return res.status(400).json({ message: 'Напишите какой-то текст!' });
         }
 
         const note = new Note({
@@ -51,7 +49,7 @@ router.post('/add', auth, async (req, res) => {
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', async (req, res) => {
     try {
         const {id} = req.body;
         const {userId} = req.user;
@@ -72,7 +70,7 @@ router.post('/delete', auth, async (req, res) => {
     }
 });
 
-router.patch('/update', auth, async (req, res) => {
+router.patch('/update', async (req, res) => {
     try {
         const {userId} = req.user;
         const {id, important, done} = req.body;
