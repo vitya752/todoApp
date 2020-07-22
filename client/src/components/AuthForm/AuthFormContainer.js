@@ -1,8 +1,9 @@
 import React from 'react';
-import AuthForm from './AuthForm';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { requestLoginThunk, requestRegisterThunk, setAuthFormAC } from '../../redux/authReducer';
+
+import AuthForm from './AuthForm';
+import { requestLoginThunk, requestRegisterThunk, setAuthFormAC } from 'redux/authReducer';
 
 const AuthFormContainer = (props) => {
 

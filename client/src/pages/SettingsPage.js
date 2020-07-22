@@ -1,6 +1,7 @@
 import React from 'react';
+
 import './style.css';
-import Settings from '../components/Settings/SettingsContainer';
+import Settings from 'components/Settings/SettingsContainer';
 
 const SettingsPage = () => {
 

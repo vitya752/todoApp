@@ -1,8 +1,8 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setSearchAC } from '../../../redux/notesReducer';
+import { bindActionCreators } from 'redux';
+
+import { setSearchAC } from 'redux/notesReducer';
 import Search from './Search';
 
 

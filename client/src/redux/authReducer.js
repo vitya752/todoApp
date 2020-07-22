@@ -1,5 +1,6 @@
-import { authApi, settingsApi } from "../api";
 import { toast } from "react-toastify";
+
+import { authApi, settingsApi } from "api";
 
 const FETCHING = 'FETCHING';
 const SET_AUTH = 'SET_AUTH';

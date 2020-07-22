@@ -1,6 +1,7 @@
 import React from 'react';
-import Avatar from '../../templates/Avatar/Avatar';
-import {emojify} from 'react-emojione';
+
+import Avatar from 'components/templates/Avatar/Avatar';
+// import {emojify} from 'react-emojione';
  
 const Message = ({ item, userId }) => {
 

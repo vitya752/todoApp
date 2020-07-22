@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import {NavLink} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setAuthAC } from '../../redux/authReducer';
+
 import './NavBar.css';
+import { setAuthAC } from 'redux/authReducer';
 
 const NavBar = ({ setAuthAC }) => {
 

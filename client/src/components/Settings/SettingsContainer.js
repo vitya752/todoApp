@@ -1,8 +1,9 @@
 import React from 'react';
-import { setSettingsAC, updateSettingsThunk, deleteAccThunk } from '../../redux/authReducer';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import Settings from './Settings';
+import { setSettingsAC, updateSettingsThunk, deleteAccThunk } from 'redux/authReducer';
 
 const SettingsContainer = ({ token, email, nickname, avatar, setSettingsAC, updateSettingsThunk, deleteAccThunk }) => {
 

@@ -1,6 +1,7 @@
 import React from 'react';
-import { useSocket } from '../hooks/useSocket';
-import Chat from '../components/Chat/ChatContainer';
+
+import { useSocket } from 'hooks/useSocket';
+import Chat from 'components/Chat/ChatContainer';
 
 const ChatPage = () => {
     

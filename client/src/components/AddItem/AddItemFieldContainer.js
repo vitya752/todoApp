@@ -1,8 +1,8 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { requestAddNoteThunk, setNewNoteAC } from '../../redux/notesReducer';
+
+import { requestAddNoteThunk, setNewNoteAC } from 'redux/notesReducer';
 import AddItemField from './AddItemField';
 
 const AddItemFieldContainer = ({ token, sending, requestAddNoteThunk, setNewNoteAC, newNote }) => {

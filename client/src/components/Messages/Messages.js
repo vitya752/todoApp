@@ -1,7 +1,9 @@
 import React from 'react';
-import Message from './Message/Message';
+
 import "./Messages.css";
-import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
+
+import Message from './Message/Message';
+import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
 
 const Messages = ({ messages = [], userId }) => {
 

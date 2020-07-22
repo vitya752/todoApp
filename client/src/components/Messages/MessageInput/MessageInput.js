@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+
 import './MessageInput.css';
-import Avatar from '../../templates/Avatar/Avatar';
+import Avatar from 'components/templates/Avatar/Avatar';
 
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'

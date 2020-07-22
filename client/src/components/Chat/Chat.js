@@ -1,7 +1,8 @@
 import React from 'react';
-import OnlineUsers from '../OnlineUsers/OnlineUsers';
-import Messages from '../Messages/Messages';
-import MessageInput from '../Messages/MessageInput/MessageInput';
+
+import OnlineUsers from 'components/OnlineUsers/OnlineUsers';
+import Messages from 'components/Messages/Messages';
+import MessageInput from 'components/Messages/MessageInput/MessageInput';
 
 const Chat = ({ submitMessage, messages, avatar, userId }) => {
     return (

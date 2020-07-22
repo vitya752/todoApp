@@ -1,5 +1,6 @@
-import { notesApi } from "../api";
 import { toast } from "react-toastify";
+
+import { notesApi } from "api";
 
 const FETCHING = 'FETCHING';
 const SENDING = 'SENDING';

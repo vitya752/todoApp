@@ -1,9 +1,10 @@
 import React, { useEffect }  from 'react';
 import { connect } from 'react-redux';
-import Chat from './Chat';
 import { bindActionCreators } from 'redux';
-import { deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC } from '../../redux/chatReducer';
-import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
+
+import Chat from './Chat';
+import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
+import { deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC } from 'redux/chatReducer';
 
 const ChatContainerWrapper = (props) => {
 

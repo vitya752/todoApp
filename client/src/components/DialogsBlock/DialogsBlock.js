@@ -1,6 +1,7 @@
 import React from 'react';
-import Loader from '../templates/Loader/Loader';
-import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
+
+import Loader from 'components/templates/Loader/Loader';
+import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
 import DialogsSearch from './DialogsSearch/DialogsSearch';
 import DialogItem from './DialogItem/DialogItem';
 

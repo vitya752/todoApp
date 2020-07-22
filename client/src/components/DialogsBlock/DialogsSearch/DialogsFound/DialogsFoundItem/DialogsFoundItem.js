@@ -1,5 +1,6 @@
 import React from 'react';
-import Avatar from '../../../../templates/Avatar/Avatar';
+
+import Avatar from 'components/templates/Avatar/Avatar';
 
 const DialogsFoundItem = (props) => {
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import InputGroup from '../templates/InputGroup/InputGroup';
+
+import InputGroup from 'components/templates/InputGroup/InputGroup';
 
 const AddItemField = ({ handleChangeField, newNote, sending, requestAddNoteThunk, token }) => {
     return (

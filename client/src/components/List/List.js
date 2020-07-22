@@ -1,6 +1,7 @@
 import React from 'react';
+
+import Loader from 'components/templates/Loader/Loader';
 import ItemList from './ItemList/ItemListContainer';
-import Loader from '../templates/Loader/Loader';
 
 const List = ({ notes, fetching }) => {
     return(

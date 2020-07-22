@@ -1,14 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import Dialogs from './Dialogs';
 import { 
     setViewSearchWindowAC, 
     setSearchFieldAC, 
     setSelectedNewIdAC, 
     setFirstMessageAC, 
     setSelectedDialogAC 
-} from '../../redux/dialogsReducer';
-import Dialogs from './Dialogs';
+} from 'redux/dialogsReducer';
 
 const DialogsContainer = (props) => {
 

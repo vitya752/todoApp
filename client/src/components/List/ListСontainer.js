@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { requestNotesThunk } from '../../redux/notesReducer';
+
 import List from './List';
+import { requestNotesThunk } from 'redux/notesReducer';
 
 const ListСontainer = ({ notes, fetching, requestNotesThunk, token, search, activeFilter }) => {
 

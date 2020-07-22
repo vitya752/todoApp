@@ -1,9 +1,9 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setFilterAC } from '../../../redux/notesReducer';
+
 import Filter from './Filter';
+import { setFilterAC } from 'redux/notesReducer';
 
 const FilterContainer = ({ setFilterAC, activeFilter }) => {
 

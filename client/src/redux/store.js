@@ -1,6 +1,7 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+
 import authReducer from './authReducer';
 import notesReducer from './notesReducer';
 import chatReducer from './chatReducer';

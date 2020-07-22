@@ -1,8 +1,9 @@
 import React from 'react';
-import DialogsBlock from '../DialogsBlock/DialogsBlock';
-import Messages from '../Messages/Messages';
-import MessageInput from '../Messages/MessageInput/MessageInput';
-import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
+
+import DialogsBlock from 'components/DialogsBlock/DialogsBlock';
+import Messages from 'components/Messages/Messages';
+import MessageInput from 'components/Messages/MessageInput/MessageInput';
+import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
 
 const Dialogs = (props) => {
     const {

@@ -1,5 +1,6 @@
 import React from 'react';
-import AuthFormContainer from '../components/AuthForm/AuthFormContainer';
+
+import AuthFormContainer from 'components/AuthForm/AuthFormContainer';
 
 const AuthPage = () => {
     return (
