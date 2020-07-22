@@ -4,12 +4,14 @@ import { reducer as formReducer } from 'redux-form';
 import authReducer from './authReducer';
 import notesReducer from './notesReducer';
 import chatReducer from './chatReducer';
+import dialogsReducer from './dialogsReducer';
 
 const reducers = combineReducers({
     auth: authReducer,
     todoPage: notesReducer,
     chatPage: chatReducer,
     form: formReducer,
+    dialogsPage: dialogsReducer
 });
 
 const store = createStore(reducers, applyMiddleware(ReduxThunk));

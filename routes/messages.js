@@ -5,10 +5,28 @@ const Message = require('../models/Message');
 
 const router = new Router();
 
+const _updateReadStatus = async (res, dialogId, userId) => {
+    await Message.updateMany(
+        {dialogId, author: { $ne: userId }},
+        { $set: { read: true } },
+        (err) => {
+            if(err) {
+                res.status(500).json({
+                    message: 'Не удалось обновить статус read',
+                });
+            } else {
+                
+            }
+        }
+    );
+};
+
 router.get('/:dialogId', async (req, res) => {
     try {
 
         const { dialogId } = req.params;
+
+        _updateReadStatus(res, dialogId, userId);
 
         const messages = await Message.find({dialogId});
 
@@ -34,18 +52,20 @@ router.post('/', async (req, res) => {
         const { dialogId, text } = req.body;
 
         if(text) {
-            const message = await new Message({
+            const message = new Message({
                 dialogId,
                 text,
                 author: userId
             });
+            const { _id } = message;
+
+            await Dialog.findOneAndUpdate({ _id: dialogId }, {lastMessage: _id});
 
             await message.save();
 
             return res.status(201).json({ 
                 message: 'Сообщение отправлено'
             });
-
         }
 
         return res.status(400).json({ message: 'Напишите какой-то текст!' });

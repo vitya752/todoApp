@@ -1,6 +1,7 @@
 import React from 'react';
 import Message from './Message/Message';
 import "./Messages.css";
+import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
 
 const Messages = ({ messages = [], userId }) => {
 
@@ -10,7 +11,11 @@ const Messages = ({ messages = [], userId }) => {
                 return <Message key={id++} item={item} userId={userId} />
             })
             :
-            (<div className="alert alert-warning">Чат пуст! Начните общение...</div>);
+            (
+                <ErrorAlert type="warning">
+                    Чат пуст! Начните общение...
+                </ErrorAlert>
+            );
 
     return (
         <div className="messages">

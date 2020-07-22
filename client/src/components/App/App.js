@@ -13,9 +13,9 @@ const App = ({isAuth}) => {
     const nav = isAuth ? <NavBar /> : null;
 
     return (
-        <div className="main-container main-container--dark-bg">
+        <div className="main-container main-container_dark">
             {nav}
-            <div className="container container--custom">
+            <div className="container">
                 {routes}
             </div>
             <ToastContainer />

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import {NavLink} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -7,38 +7,35 @@ import './NavBar.css';
 
 const NavBar = ({ setAuthAC }) => {
 
+    const [menuStatus, setMenuStatus] = useState(false);
+
     const toggleMenu = () => {
-        const menu = document.querySelector('.collapse.navbar-collapse');
-        menu.classList.toggle('active');
-    }
+        setMenuStatus(!menuStatus);
+    };
 
     const logoutHandler = (e) => {
         e.preventDefault();
         setAuthAC({});
     }
 
-    useEffect(() => {
-        const button = document.querySelector('.navbar-toggler');
-        if(button) {
-            button.addEventListener('click', toggleMenu);
-        }
-
-        return () => {
-            if(button) {
-                button.removeEventListener('click', toggleMenu);
-            }
-        }
-
-    }, []);
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <span className="navbar-brand">Notes</span>
-            <button className="navbar-toggler" type="button" >
+            <button 
+                className="navbar-toggler" 
+                type="button"
+                onClick={toggleMenu} >
                 <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div 
+                className={`collapse navbar-collapse ${menuStatus && 'active'}`} 
+                id="navbarNavAltMarkup" >
                 <div className="navbar-nav ml-auto">
+                    <NavLink 
+                        className="nav-item nav-link"
+                        to="/dialogs">
+                        Диалоги
+                    </NavLink>
                     <NavLink 
                         className="nav-item nav-link"
                         to="/chat">

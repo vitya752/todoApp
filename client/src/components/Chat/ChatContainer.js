@@ -1,27 +1,25 @@
 import React, { useEffect }  from 'react';
-import socketIOClient from "socket.io-client";
 import { connect } from 'react-redux';
 import Chat from './Chat';
 import { bindActionCreators } from 'redux';
 import { deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC } from '../../redux/chatReducer';
+import ErrorAlert from '../templates/ErrorAlert/ErrorAlert';
 
 const ChatContainerWrapper = (props) => {
 
     const { nickname } = props;
     if(!nickname) {
         return (
-            <div className="alert alert-danger">
+            <ErrorAlert type="danger">
                 Для входа в чат нужно иметь никнэйм. Настроить никнэйм Вы можете на странице "Настройки".
-            </div>
+            </ErrorAlert>
         )
     }
     return <ChatContainer {...props} />
     
 };
 
-const socket = socketIOClient('http://localhost:5000');
-
-const ChatContainer = ({ userId, avatar, messages, deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC }) => {
+const ChatContainer = ({ socket, userId, avatar, messages, deleteUserAC, setOnlineUsersAC, pushMessageAC, clearMessagesAC }) => {
 
     useEffect(() => {
         
@@ -33,7 +31,7 @@ const ChatContainer = ({ userId, avatar, messages, deleteUserAC, setOnlineUsersA
             socket.disconnect();
         };
 
-    }, []);
+    }, [userId, socket, deleteUserAC, clearMessagesAC]);
 
     useEffect(() => {
 

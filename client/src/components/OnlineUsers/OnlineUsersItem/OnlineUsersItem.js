@@ -1,13 +1,10 @@
 import React from 'react';
+import Avatar from '../../templates/Avatar/Avatar';
 
 const OnlineUsersItem = ({data: {avatar, nickname}}) => {
     return (
         <li className="d-flex align-items-center">
-            <div className="avatar-block">
-                <img 
-                    src={avatar ? avatar : "https://instagram.inoutmkt.com.br/assets/img/no-avatar.png"} 
-                    alt={nickname} />
-            </div>
+            <Avatar avatar={avatar} alt={nickname} />
             <span className="nickname">
                 {nickname}
             </span>

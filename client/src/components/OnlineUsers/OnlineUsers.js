@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './OnlineUsers.css';
 import { bindActionCreators } from 'redux';
-import { setOpenOnlineUsersAC } from '../../../redux/chatReducer';
+import { setOpenOnlineUsersAC } from '../../redux/chatReducer';
 import OnlineUsersItem from './OnlineUsersItem/OnlineUsersItem';
 
 const OnlineUsers = ({ onlineUsers, openOnlineUsers, setOpenOnlineUsersAC }) => {

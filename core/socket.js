@@ -10,6 +10,7 @@ module.exports = (http) => {
     io.sockets.on('connection', (socket) => {
 
         socket.on('disconnect', () => {
+            console.log('Exit')
             if(socket.chat) {
                 deleteAndUpdateOnlineUsers();
             }
@@ -34,6 +35,7 @@ module.exports = (http) => {
         });
 
         socket.on('CHAT:SEND_MESSAGE', async (data) => {
+            console.log('Yes');
             const user = await User.findOne({ _id: data.userId });
             if(user) {
                 io.sockets.to('chat').emit('CHAT:ADD_MESSAGE', {

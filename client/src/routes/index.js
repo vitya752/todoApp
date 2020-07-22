@@ -3,6 +3,7 @@ import {Route, Switch, Redirect} from 'react-router-dom';
 import TodoPage from './../pages/TodoPage';
 import AuthPage from './../pages/AuthPage';
 import ChatPage from './../pages/ChatPage';
+import DialogsPage from '../pages/DialogsPage';
 import SettingsPage from '../pages/SettingsPage';
 
 const routesRender = (isAuth) => {
@@ -17,6 +18,9 @@ const routesRender = (isAuth) => {
                 </Route>
                 <Route path="/settings" exact>
                     <SettingsPage />
+                </Route>
+                <Route path="/dialogs" exact>
+                    <DialogsPage />
                 </Route>
                 <Redirect to="/todo" />
             </Switch>

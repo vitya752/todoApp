@@ -52,33 +52,27 @@ router.post('/', async (req, res) => {
                 author: userId,
                 partner: partnerId
             });
-            dialog
-                .save()
-                .then(dialogObj => {
-                    const { _id } = dialogObj;
-                    const { text } = req.body;
-                    const message = new Message({
-                        text,
-                        dialogId: _id,
-                        author: userId
-                    });
+            
+            const { _id } = dialog;
+            const { text } = req.body;
+            const message = new Message({
+                text,
+                dialogId: _id,
+                author: userId
+            });
 
-                    message 
+            message 
+                .save()
+                .then(messageObj => {
+                    const { _id: messageId } = messageObj;
+                    dialog.lastMessage = messageId;
+                    dialog
                         .save()
-                        .then(messageObj => {
-                            const { _id: messageId } = messageObj;
-                            dialogObj.lastMessage = messageId;
-                            dialogObj
-                                .save()
-                                .then((response) => {
-                                    res.json({
-                                        dialog: response
-                                    });
-                                })
+                        .then((response) => {
+                            res.json({
+                                dialog: response
+                            });
                         })
-                        .catch(e => {
-                            res.json(e);
-                        });
                 })
                 .catch(e => {
                     res.json(e);
