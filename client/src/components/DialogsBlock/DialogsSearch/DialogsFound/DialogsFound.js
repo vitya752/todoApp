@@ -8,6 +8,7 @@ import DialogsNewMessage from './DialogsNewMessage/DialogsNewMessage';
 const DialogsFound = (props) => {
 
     const {
+        token,
         searchField,
         viewSearchWindow,
         foundUsers,
@@ -16,7 +17,8 @@ const DialogsFound = (props) => {
         selectedNewId,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        setViewSearchWindowAC
+        setViewSearchWindowAC,
+        findUsersThunk
     } = props;
 
     const dialogsFoundItemProps = {
@@ -33,6 +35,11 @@ const DialogsFound = (props) => {
     return (
         <div className={`dialogs__found ${viewSearchWindow ? 'dialogs__found_active' : ''}`}>
             <button 
+                className="dialogs__button dialogs__button_search"
+                disabled={searchField.length >= 3 ? false : true}
+                onClick={() => findUsersThunk(token, searchField)}
+                >Искать</button>
+            <button 
                 className="dialogs__button" 
                 type="button"
                 onClick={ () => {setViewSearchWindowAC(false)} }>
@@ -46,9 +53,9 @@ const DialogsFound = (props) => {
                 Назад к диалогам
             </button>
 
-            <div className="found__content">
+            <div className="found-dialogs">
                 {   foundUsers.length ? 
-                    <ul className="found__list">
+                    <ul className="found-dialogs__list">
                         {
                             foundUsers.map(item => {
                                 return (

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import './DialogBlock.css';
 import Loader from 'components/templates/Loader/Loader';
 import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
 import DialogsSearch from './DialogsSearch/DialogsSearch';
@@ -8,10 +9,10 @@ import DialogItem from './DialogItem/DialogItem';
 const Dialogs = (props) => {
 
     const {
+        token,
         dialogs,
         loading,
         selectedDialog,
-        setSelectedDialogAC,
         searchField,
         viewSearchWindow,
         foundUsers,
@@ -20,10 +21,14 @@ const Dialogs = (props) => {
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
-        setFirstMessageAC
+        setFirstMessageAC,
+
+        getMessagesFromDialogThunk,
+        findUsersThunk
     } = props;
 
     const dialogsSearchProps = {
+        token,
         loading,
         searchField,
         viewSearchWindow,
@@ -33,12 +38,14 @@ const Dialogs = (props) => {
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
-        setFirstMessageAC
+        setFirstMessageAC,
+        findUsersThunk
     };
 
     const dialogItemProps = {
+        token, 
         selectedDialog,
-        setSelectedDialogAC
+        getMessagesFromDialogThunk
     }; 
 
     return (

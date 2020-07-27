@@ -8,8 +8,11 @@ import {
     setSearchFieldAC, 
     setSelectedNewIdAC, 
     setFirstMessageAC, 
-    setSelectedDialogAC 
+    getDialogsThunk,
+    getMessagesFromDialogThunk,
+    findUsersThunk
 } from 'redux/dialogsReducer';
+import { useEffect } from 'react';
 
 const DialogsContainer = (props) => {
 
@@ -28,12 +31,18 @@ const DialogsContainer = (props) => {
         setSelectedNewIdAC,
         setFirstMessageAC,
 
+        getDialogsThunk,
+        getMessagesFromDialogThunk,
+        findUsersThunk,
+
         messages,
         userId,
-        avatar
+        avatar,
+        token
     } = props;
 
     const dialogsProps = {
+        token,
         dialogs,
         loading,
         selectedDialog,
@@ -46,7 +55,9 @@ const DialogsContainer = (props) => {
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
-        setFirstMessageAC
+        setFirstMessageAC,
+        getMessagesFromDialogThunk,
+        findUsersThunk
     };
 
     const messagesProps = {
@@ -54,6 +65,10 @@ const DialogsContainer = (props) => {
         avatar,
         messages
     };
+
+    useEffect(() => {
+        getDialogsThunk(token, userId);
+    }, [getDialogsThunk, token, userId]);
     
     return (
         <Dialogs dialogsProps={dialogsProps} messagesProps={messagesProps} />
@@ -74,7 +89,8 @@ const mapStateToProps = state => {
         
         messages: state.dialogsPage.messages,
         userId: state.auth.userId,
-        avatar: state.auth.avatar
+        avatar: state.auth.avatar,
+        token: state.auth.token
     }
 };
 
@@ -84,8 +100,10 @@ const mapDispatchToProps = dispatch => {
         setSearchFieldAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        setSelectedDialogAC,
 
+        getDialogsThunk,
+        getMessagesFromDialogThunk,
+        findUsersThunk
 
     }, dispatch);
 };

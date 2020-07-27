@@ -22,7 +22,6 @@ const MessageInput = ({ submitMessage, avatar }) => {
 
     const addEmoji = e => {
         let emoji = e.native;
-        console.log(e)
         setMessage(message + emoji);
     };
 

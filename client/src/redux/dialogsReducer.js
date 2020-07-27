@@ -1,3 +1,8 @@
+import { toast } from "react-toastify";
+
+import { dialogsApi, messagesApi, usersApi } from "api";
+import { _transformDialogs, _transformMessages, _transformFoundUsers } from 'utils/transformData';
+
 const SET_LOADING = 'SET_LOADING';
 const SET_VIEW_SEARCH_WINDOW = 'SET_VIEW_SEARCH_WINDOW';
 const SET_SEARCH_FIELD = 'SET_SEARCH_FIELD';
@@ -17,69 +22,9 @@ const initialState = {
     selectedNewId: null,
     firstMessage: '',
     selectedDialog: null,
-    dialogs: [
-        {
-            id: 'dialogId1',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-            text: 'Ахахахахахахахахахаахахахаххахаха)',
-            my: false,
-            new: 3
-        },
-        {
-            id: 'dialogId2',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-            text: 'Ахахахахахахахахахаахахахаххахаха)',
-            my: true,
-            new: 0
-        },
-        {
-            id: 'dialogId3',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-            text: 'Да ты гонишь бл*. Как так-то?)',
-            my: false,
-            new: 2
-        }
-    ],
-    foundUsers: [
-        {
-            partnerId: 'partnerId1',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-        },
-        {
-            partnerId: 'partnerId2',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-        },
-        {
-            partnerId: 'partnerId3',
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            email: 'vitya752@ukr.net',
-        }
-    ],
-    messages: [
-        {
-            senderId: 1,
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            author: 'vitya752',
-            text: 'Привет. Шо ты?'
-        },
-        {
-            senderId: 1,
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            author: 'vitya752',
-            text: 'Я вот соскучился.'
-        },
-        {
-            senderId: 1,
-            avatar: 'https://www.pinclipart.com/picdir/big/136-1360593_donald-duck-clipart-sad-donald-duck-sad-png.png',
-            author: 'vitya752',
-            text: 'А ты?'
-        }
-    ]
+    dialogs: [],
+    foundUsers: [],
+    messages: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -225,6 +170,65 @@ export const pushToMessagesAC = payload => {
         type: PUSH_TO_MESSAGES,
         message: payload
     }
+};
+
+export const getDialogsThunk = (token, userId) => {
+    return async dispatch => {
+        try {
+            dispatch(setLoadingAC(true));
+            const api = dialogsApi(token);
+            const data = await api.getDialogs();
+            const transformDialogs = _transformDialogs({dialogs: data.data.dialogs, userId});
+            dispatch(setDialogsAC(transformDialogs));
+            dispatch(setLoadingAC(false));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+};
+
+export const getMessagesFromDialogThunk = (token, dialogId, participants) => {
+    return async dispatch => {
+        try {
+            dispatch(setLoadingAC(true));
+            dispatch(setSelectedDialogAC(dialogId));
+            dispatch(setMessagesAC([]));
+            const api = messagesApi(token);
+            const data = await api.getMessages(dialogId);
+            const transformMessages = _transformMessages({
+                messages: data.data.messages,
+                participants
+            });
+            dispatch(setMessagesAC(transformMessages));
+            dispatch(setLoadingAC(false));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+};
+
+export const findUsersThunk = (token, reqEmail) => {
+    return async dispatch => {
+        try {
+            dispatch(setFoundUsersAC([]));
+            dispatch(setLoadingAC(true));
+            const api = usersApi(token);
+            const data = await api.findUsers(reqEmail);
+            const transformFoundUsers = _transformFoundUsers({
+                foundUsers: data.data.foundUsers
+            });
+            dispatch(setFoundUsersAC(transformFoundUsers));
+            dispatch(setLoadingAC(false));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+};
+
+
+const requestError = (action, e, dispatch) => {
+    dispatch(action);
+    toast(e.response.data.message);
 };
 
 export default reducer;

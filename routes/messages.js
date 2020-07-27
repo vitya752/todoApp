@@ -26,10 +26,10 @@ router.get('/:dialogId', async (req, res) => {
 
         const { dialogId } = req.params;
 
-        _updateReadStatus(res, dialogId, userId);
+        // _updateReadStatus(res, dialogId, userId);
 
         const messages = await Message.find({dialogId});
-
+        
         if(messages) {
             return res.status(200).json({
                 messages,

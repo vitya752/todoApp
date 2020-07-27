@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const notesApi = token => {
 
+    const url = '/api/note';
+
     const template = axios.create({
         headers: {
             Authorization: `Bearer ${token}`
@@ -9,15 +11,15 @@ const notesApi = token => {
     });
 
     const getNotes = async () => {
-        return await template.get('/api/note');
+        return await template.get(`${url}`);
     };
 
     const addNote = async (text) => {
-        return await template.post('/api/note/add', {text});
+        return await template.post(`${url}/add`, {text});
     };
 
     const updateNote = async (noteId, important, done) => {
-        return await template.patch('/api/note/update', {
+        return await template.patch(`${url}/update`, {
             id: noteId,
             important,
             done
@@ -25,7 +27,7 @@ const notesApi = token => {
     };
 
     const deleteNote = async (noteId) => {
-        return await template.post('/api/note/delete', {id: noteId});
+        return await template.post(`${url}/delete`, {id: noteId});
     }
 
     return {

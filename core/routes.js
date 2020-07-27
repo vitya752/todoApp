@@ -3,6 +3,7 @@ const noteRouters = require('../routes/note');
 const settingsRouters = require('../routes/settings');
 const dialogsRouters = require('../routes/dialogs');
 const messagesRouters = require('../routes/messages');
+const findUsersRouters = require('../routes/findUsers');
 const auth = require('../middleware/auth.middleware');
 const lastSeen = require('../middleware/lastSeen.middleware');
 
@@ -16,6 +17,7 @@ module.exports = (app, io) => {
     app.use('/api/settings', settingsRouters);
     app.use('/api/dialogs', dialogsRouters);
     app.use('/api/messages', messagesRouters);
+    app.use('/api/find', findUsersRouters);
 
     // const User = new UserControllers();
     // app.post('/api/auth/register', User.register);

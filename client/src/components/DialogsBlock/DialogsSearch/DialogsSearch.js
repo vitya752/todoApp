@@ -1,11 +1,13 @@
 import React from 'react';
 
+import './DialogsSearch.css';
 import DialogsSearchInput from './DialogsSearchInput/DialogsSearchInput';
 import DialogsFound from './DialogsFound/DialogsFound';
 
 const DialogsSearch = (props) => {
 
     const {
+        token,
         searchField,
         viewSearchWindow,
         foundUsers,
@@ -15,10 +17,18 @@ const DialogsSearch = (props) => {
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
-        setFirstMessageAC
+        setFirstMessageAC,
+        findUsersThunk
     } = props;
 
+    const dialogsSearchInputProps = {
+        searchField,
+        setSearchFieldAC,
+        setViewSearchWindowAC
+    };
+
     const dialogsFoundProps = {
+        token,
         searchField,
         viewSearchWindow,
         foundUsers,
@@ -27,13 +37,8 @@ const DialogsSearch = (props) => {
         selectedNewId,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        setViewSearchWindowAC
-    };
-
-    const dialogsSearchInputProps = {
-        searchField,
-        setSearchFieldAC,
-        setViewSearchWindowAC
+        setViewSearchWindowAC,
+        findUsersThunk
     };
 
     return (

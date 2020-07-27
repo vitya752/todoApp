@@ -1,0 +1,58 @@
+.dialogs__item {
+    cursor: pointer;
+    transition: .25s;
+    padding-top: 10px;
+    padding-left: 45px;
+    position: relative;
+    padding-bottom: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, .3);
+}
+
+.dialogs__item_active,
+.dialogs__item_active:hover {
+    background-color: rgba(135, 152, 169, .4);
+}
+
+.dialogs__item .avatar-block {
+    top: 15px;
+    left: 5px;
+    position: absolute;
+}
+
+.dialogs__item:hover {
+    background-color: rgba(135, 152, 169, .2);
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog__message_my-unread {
+    margin-right: 5px;
+    background-color: #b1bbc5;
+}
+
+.dialog__message_my-read {
+    margin-right: 5px;
+    background-color: #ededed;
+}
+
+.dialog__new-messages {
+    top: 15px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    position: absolute;
+    background-color: orange;
+    border: 1px solid orange;
+}
+
+.dialog__new-messages span {
+    font-size: 10px;
+    position: relative;
+}

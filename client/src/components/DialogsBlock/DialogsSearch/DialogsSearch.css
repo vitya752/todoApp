@@ -1,0 +1,60 @@
+.dialogs__search input {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+}
+
+.dialogs__found {
+    top: 38px;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transition: .5s;
+    position: absolute;
+    background-color: #fff;
+    height: calc(100vh - 141px);
+    transform: translateX(-100%);
+}
+
+.dialogs__found_active {
+    transform: translateX(0);
+}
+
+.found-dialogs {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 45px);
+    justify-content: space-between;
+}
+
+.found-dialogs textarea {
+    width: 100%;
+    resize: none;
+    height: 100px;
+    padding: 10px;
+    outline: none;
+    border-left: 0;
+    border-right: 0;
+    border-color: rgba(0, 0, 0, .3);
+}
+
+.found-dialogs__list {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.found-dialogs__list li {
+    padding: 10px;
+}
+
+.found-dialogs__list li:hover {
+    background-color: rgba(135, 152, 169, .2);
+}
+
+.found-dialogs__list li label {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

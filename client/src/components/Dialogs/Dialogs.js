@@ -4,6 +4,7 @@ import DialogsBlock from 'components/DialogsBlock/DialogsBlock';
 import Messages from 'components/Messages/Messages';
 import MessageInput from 'components/Messages/MessageInput/MessageInput';
 import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
+import Loader from 'components/templates/Loader/Loader';
 
 const Dialogs = (props) => {
     const {
@@ -24,14 +25,18 @@ const Dialogs = (props) => {
             </div>
             <div className="col-9 pl-2 m-0 messages-wrapper w-auto">
                 {
-                    dialogsProps.selectedDialog ? (
+                    messages.length > 0 ? (
                         <>
                             <Messages messages={messages} userId={userId} />
                             <MessageInput submitMessage={submitMessage} avatar={avatar} />
                         </>
-                    ) : <div className="messages-plug text-center">
-                        <ErrorAlert>Выберите собеседника</ErrorAlert>
-                    </div>
+                    ) : (
+                        <div className="messages-plug text-center">
+                            {
+                                dialogsProps.loading ? <Loader /> : <ErrorAlert type="warning">Выберите собеседника</ErrorAlert>
+                            }
+                        </div>
+                    )
                 }
             </div> 
         </div>

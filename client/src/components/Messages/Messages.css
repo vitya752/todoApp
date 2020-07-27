@@ -35,3 +35,11 @@
     color: black;
     background: bisque;
 }
+
+.messages-plug {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #fff;
+}
