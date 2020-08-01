@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-const DialogsNewMessage = props => {
+import { DialogsContext } from 'context';
+
+const DialogsNewMessage = () => {
 
     const {
         firstMessage,
         selectedNewId,
         setFirstMessageAC
-    } = props;
+    } = useContext(DialogsContext);
 
     return (
         <div className="found__new-message">

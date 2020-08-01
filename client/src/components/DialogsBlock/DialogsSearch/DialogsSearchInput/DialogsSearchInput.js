@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-const DialogsSearchInput = (props) => {
+import { DialogsContext } from 'context';
 
+const DialogsSearchInput = () => {
+    
     const {
         searchField,
         setSearchFieldAC,
         setViewSearchWindowAC
-    } = props;
+    } = useContext(DialogsContext);
 
     return (
         <div className="input-group input-group-default">

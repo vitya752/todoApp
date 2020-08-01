@@ -2,28 +2,33 @@ import React from 'react';
 
 import './DialogItem.css';
 import Avatar from 'components/templates/Avatar/Avatar';
+import { useContext } from 'react';
+import { DialogsContext } from 'context';
 
 const DialogItem = (props) => {
 
+    const { item } = props;
+
     const {
-        item,
-        token, 
         selectedDialog,
-        getMessagesFromDialogThunk
-    } = props;
+        selectDialog
+    } = useContext(DialogsContext);
 
     return (
         <li 
             className={`dialogs__item ${item.id === selectedDialog ? 'dialogs__item_active' : ''}`}
-            onClick={() => getMessagesFromDialogThunk(token, item.id, item.participants)} >
+            onClick={() => selectDialog(item.id, item.participants)} >
             <Avatar small="true" avatar={item.avatar} alt={item.email} />
             <div className="dialog">
-                <span className="dialog__email">{item.email}</span>
+                <div className="d-flex flex-row justify-content-between">
+                    <span className="dialog__email">{item.email}</span>    
+                    <span className="dialog__updated">{item.date}</span>
+                </div>
                 <span className={`dialog__message ${item.my ? 'dialog__message_my-unread' : ''}`}>{`${item.text.substring(0, 25)}...`}</span>
             </div>
             {
-                !item.read && !item.my && (<div className="dialog__new-messages">
-                                    <span>NEW</span>
+                item.unreadMessages > 0 && !item.my && (<div className="dialog__new-messages">
+                                    <span>{item.unreadMessages}</span>
                                 </div>) 
             }
         </li>

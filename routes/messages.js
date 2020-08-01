@@ -1,32 +1,31 @@
 const {Router} = require('express');
 const Dialog = require('../models/Dialog');
-const User = require('../models/User');
 const Message = require('../models/Message');
 
 const router = new Router();
 
 const _updateReadStatus = async (res, dialogId, userId) => {
-    await Message.updateMany(
-        {dialogId, author: { $ne: userId }},
-        { $set: { read: true } },
-        (err) => {
-            if(err) {
-                res.status(500).json({
-                    message: 'Не удалось обновить статус read',
-                });
-            } else {
-                
-            }
-        }
-    );
+
+    const dialog = await Dialog.findOne({_id: dialogId}).populate('lastMessage');
+
+    const authorId = dialog.lastMessage.author;
+
+    if((userId + '') !== (authorId + '')) {
+        await Dialog.findOneAndUpdate(
+            { _id: dialogId },
+            { unreadMessages: 0 }
+        );
+    }
 };
+
 
 router.get('/:dialogId', async (req, res) => {
     try {
 
+        const { userId } = req.user;
         const { dialogId } = req.params;
 
-        // _updateReadStatus(res, dialogId, userId);
+        _updateReadStatus(res, dialogId, userId);
 
         const messages = await Message.find({dialogId});
         
@@ -59,12 +58,14 @@ router.post('/', async (req, res) => {
             });
             const { _id } = message;
 
-            await Dialog.findOneAndUpdate({ _id: dialogId }, {lastMessage: _id});
+            const dialog = await Dialog.findOneAndUpdate({ _id: dialogId }, {lastMessage: _id, $inc: {unreadMessages: 1}} );
 
             await message.save();
 
             return res.status(201).json({ 
-                message: 'Сообщение отправлено'
+                message: 'Сообщение отправлено',
+                messageObj: message,
+                unreadMessages: dialog.unreadMessages + 1
             });
         }
 

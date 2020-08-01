@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Avatar from 'components/templates/Avatar/Avatar';
+import { DialogsContext } from 'context';
 
 const DialogsFoundItem = (props) => {
 
+    const { item } = props;
+
     const {
-        item,
         selectedNewId,
         setSelectedNewIdAC
-    } = props;
+    } = useContext(DialogsContext);;
 
     return (
         <li>

@@ -2,21 +2,29 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { DialogsContext } from 'context';
+
 import Dialogs from './Dialogs';
 import { 
     setViewSearchWindowAC, 
     setSearchFieldAC, 
     setSelectedNewIdAC, 
     setFirstMessageAC, 
+    pushToMessagesAC,
+    setSelectedDialogAC,
     getDialogsThunk,
     getMessagesFromDialogThunk,
-    findUsersThunk
+    findUsersThunk,
+    sendMessageThunk,
+    updateDialogsThunk
 } from 'redux/dialogsReducer';
 import { useEffect } from 'react';
 
 const DialogsContainer = (props) => {
 
     const {
+        socket,
+
         dialogs,
         loading,
         selectedDialog,
@@ -30,23 +38,83 @@ const DialogsContainer = (props) => {
         setViewSearchWindowAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
+        pushToMessagesAC,
 
         getDialogsThunk,
         getMessagesFromDialogThunk,
         findUsersThunk,
+        sendMessageThunk,
+        updateDialogsThunk,
 
         messages,
         userId,
         avatar,
+        nickname, 
+        email,
         token
     } = props;
+
+    const selectDialog = (dialogId, participants) => {
+        socket.emit('DIALOGS:JOIN_TO_DIALOG', {
+            dialogId
+        });
+        setSelectedDialogAC(dialogId);
+        getMessagesFromDialogThunk(token, dialogId, participants);
+    };
+
+    const submitMessage = (text) => {
+
+        const partnerId = findPartnerId(userId, selectedDialog, dialogs);
+        
+        const user = {
+            userId,
+            avatar,
+            nickname,
+            email
+        };
+
+        sendMessageThunk(token, selectedDialog, text);
+
+        socket.emit('DIALOGS:SEND_MESSAGE_TO_DIALOG', {
+            user,
+            text,
+            dialogId: selectedDialog,
+            partnerId
+        });
+
+    };
+
+    const findPartnerId = (userId, selectedDialog, dialogs) => {        
+        const dialog = dialogs.filter(item => item.id === selectedDialog);
+        const participants = dialog[0].participants;
+
+        if(participants.author._id === userId) return participants.partner._id;
+        else return participants.author._id;
+    };
+
+    useEffect(() => {
+        getDialogsThunk(token, userId);
+        socket.emit('DIALOGS:JOIN', { userId });
+
+        return () => {
+            socket.disconnect();
+        };
+
+    }, [getDialogsThunk, token, userId, socket]);
+    
+    useEffect(() => {
+        socket.on('DIALOGS:ADD_MESSAGE', data => {
+            pushToMessagesAC(data.message);
+            updateDialogsThunk(data.newDialog);
+        });
+
+    }, [pushToMessagesAC, updateDialogsThunk, socket]);
 
     const dialogsProps = {
         token,
         dialogs,
         loading,
         selectedDialog,
-        setSelectedDialogAC,
         searchField,
         viewSearchWindow,
         foundUsers,
@@ -56,22 +124,22 @@ const DialogsContainer = (props) => {
         setViewSearchWindowAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        getMessagesFromDialogThunk,
-        findUsersThunk
+        findUsersThunk,
+
+        selectDialog
     };
 
     const messagesProps = {
         userId,
         avatar,
-        messages
+        messages,
+        submitMessage
     };
 
-    useEffect(() => {
-        getDialogsThunk(token, userId);
-    }, [getDialogsThunk, token, userId]);
-    
     return (
-        <Dialogs dialogsProps={dialogsProps} messagesProps={messagesProps} />
+        <DialogsContext.Provider value={dialogsProps} >
+            <Dialogs messagesProps={messagesProps} />
+        </DialogsContext.Provider>
     )
 };
 
@@ -90,7 +158,9 @@ const mapStateToProps = state => {
         messages: state.dialogsPage.messages,
         userId: state.auth.userId,
         avatar: state.auth.avatar,
-        token: state.auth.token
+        token: state.auth.token,
+        nickname: state.auth.nickname,
+        email: state.auth.email
     }
 };
 
@@ -100,10 +170,14 @@ const mapDispatchToProps = dispatch => {
         setSearchFieldAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
+        pushToMessagesAC,
+        setSelectedDialogAC,
 
         getDialogsThunk,
         getMessagesFromDialogThunk,
-        findUsersThunk
+        findUsersThunk,
+        sendMessageThunk,
+        updateDialogsThunk
 
     }, dispatch);
 };

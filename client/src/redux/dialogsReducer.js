@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 
 import { dialogsApi, messagesApi, usersApi } from "api";
 import { _transformDialogs, _transformMessages, _transformFoundUsers } from 'utils/transformData';
+import { formatDate } from "utils/formatDate";
 
 const SET_LOADING = 'SET_LOADING';
 const SET_VIEW_SEARCH_WINDOW = 'SET_VIEW_SEARCH_WINDOW';
@@ -10,7 +11,7 @@ const SET_SELECTED_NEW_ID = 'SET_CHECKED_NEW_ID';
 const SET_FIRST_MESSAGE = 'SET_FIRST_MESSAGE';
 const SET_SELECTED_DIALOG = 'SET_SELECTED_DIALOG';
 const SET_DIALOGS = 'SET_DIALOGS';
-const PUSH_TO_DIALOGS = 'PUSH_TO_DIALOGS';
+const UPDATE_DIALOGS = 'UPDATE_DIALOGS';
 const SET_FOUND_USERS = 'SET_FOUND_USERS';
 const SET_MESSAGES = 'SET_MESSAGES';
 const PUSH_TO_MESSAGES = 'PUSH_TO_MESSAGES';
@@ -64,14 +65,28 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 dialogs: action.dialogs
             }
-        case PUSH_TO_DIALOGS:
-            return {
-                ...state,
-                dialogs: [
-                    action.dialog,
-                    ...state.dialogs
-                ]
+        case UPDATE_DIALOGS: {
+            const idx = state.dialogs.findIndex(item => item.id === action.dialog.id);
+            const dialog = {
+                ...state.dialogs[idx],
+                ...action.dialog,
+                unreadMessages: state.dialogs[idx].unreadMessages + 1 
+            };
+
+            if(idx !== -1) {
+                return {
+                    ...state,
+                    dialogs: [
+                        dialog,
+                        ...state.dialogs.slice(0, idx),
+                        ...state.dialogs.slice(idx + 1)
+                    ]
+                }
             }
+
+            break;
+
+        }
         case SET_FOUND_USERS:
             return {
                 ...state,
@@ -144,9 +159,9 @@ export const setDialogsAC = payload => {
     }
 };
 
-export const pushToDialogsAC = payload => {
+export const updateDialogsAC = payload => {
     return {
-        type: PUSH_TO_DIALOGS,
+        type: UPDATE_DIALOGS,
         dialog: payload
     }
 };
@@ -191,7 +206,6 @@ export const getMessagesFromDialogThunk = (token, dialogId, participants) => {
     return async dispatch => {
         try {
             dispatch(setLoadingAC(true));
-            dispatch(setSelectedDialogAC(dialogId));
             dispatch(setMessagesAC([]));
             const api = messagesApi(token);
             const data = await api.getMessages(dialogId);
@@ -201,6 +215,34 @@ export const getMessagesFromDialogThunk = (token, dialogId, participants) => {
             });
             dispatch(setMessagesAC(transformMessages));
             dispatch(setLoadingAC(false));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+};
+
+export const sendMessageThunk = (token, dialogId, text, socket) => {
+    return async dispatch => {
+        try {
+            const api = messagesApi(token);
+            await api.sendMessage(dialogId, text);
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    }
+};
+
+export const updateDialogsThunk = (newDialog) => {
+    return async dispatch => {
+        try {
+            const { dialogId, text, date } = newDialog;
+            const result = {
+                id: dialogId,
+                text: text,
+                fulldate: date,
+                date: formatDate({dateFromBase: date, type: 'dialogs'})
+            };
+            dispatch(updateDialogsAC(result));
         } catch(e) {
             requestError(setLoadingAC(false), e, dispatch);
         }

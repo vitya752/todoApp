@@ -1,0 +1,10 @@
+nav {
+    top: 0;
+    z-index: 5;
+    width: 100%;
+    position: fixed !important;
+}
+
+.collapse.navbar-collapse.active {
+    display: block;
+}

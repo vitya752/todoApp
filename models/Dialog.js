@@ -14,6 +14,9 @@ const schema = new Schema({
     lastMessage: {
         type: Schema.Types.ObjectId,
         ref: 'Message'
+    },
+    unreadMessages: {
+        type: Schema.Types.Number
     }
 });
 

@@ -1,6 +1,8 @@
+import { formatDate } from './formatDate';
+
 export const _transformDialogs = ({dialogs, userId}) => {
     
-    return dialogs.map(dialog => {
+    const mapDialogs = dialogs.map(dialog => {
         let partner;
 
         if(dialog.partner._id === userId) {
@@ -14,15 +16,21 @@ export const _transformDialogs = ({dialogs, userId}) => {
             avatar: partner.avatar,
             email: partner.email,
             text: dialog.lastMessage.text,
+            fullDate: dialog.lastMessage.createdAt,
+            date: formatDate({dateFromBase: dialog.lastMessage.createdAt, type: 'dialogs'}),
             my: dialog.lastMessage.author === userId,
-            read: dialog.lastMessage.read,
+            unreadMessages: dialog.unreadMessages,
             participants: {
                 author: dialog.author,
                 partner: dialog.partner
             }
         }
 
-    })
+    });
+
+    return mapDialogs.sort((a, b) => {
+        return new Date(b.fullDate) - new Date(a.fullDate)
+    });
 };
 
 export const _transformMessages = ({messages, participants}) => {
@@ -38,7 +46,9 @@ export const _transformMessages = ({messages, participants}) => {
             senderId: ownerMessage._id,
             avatar: ownerMessage.avatar,
             author: ownerMessage.nickname || ownerMessage.email,
-            text: message.text
+            text: message.text,
+            fullDate: message.createdAt,
+            date: formatDate({dateFromBase: message.createdAt, type: 'messages'})
         }
     });
 };

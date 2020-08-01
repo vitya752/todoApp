@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
                                 .find()
                                 .or( [{ author: userId }, { partner: userId }] )
                                 .populate(['author', 'partner'])
-                                .populate('lastMessage', 'text author');
+                                .populate('lastMessage');
 
         if(!dialogs.length > 0) {
             return res.status(400).json({ 

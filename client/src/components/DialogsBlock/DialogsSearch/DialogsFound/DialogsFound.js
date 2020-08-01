@@ -1,36 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Loader from 'components/templates/Loader/Loader';
 import ErrorAlert from 'components/templates/ErrorAlert/ErrorAlert';
 import DialogsFoundItem from './DialogsFoundItem/DialogsFoundItem';
 import DialogsNewMessage from './DialogsNewMessage/DialogsNewMessage';
+import { DialogsContext } from 'context';
 
 const DialogsFound = (props) => {
 
-    const {
+    const { 
         token,
-        searchField,
-        viewSearchWindow,
-        foundUsers,
         loading,
-        firstMessage,
-        selectedNewId,
-        setSelectedNewIdAC,
-        setFirstMessageAC,
+        viewSearchWindow,
+        searchField,
+        foundUsers,
+
+        findUsersThunk,
         setViewSearchWindowAC,
-        findUsersThunk
-    } = props;
-
-    const dialogsFoundItemProps = {
-        selectedNewId,
-        setSelectedNewIdAC
-    };
-
-    const dialogsNewMessageProps = {
-        firstMessage,
-        selectedNewId,
-        setFirstMessageAC
-    };
+    } = useContext(DialogsContext);
 
     return (
         <div className={`dialogs__found ${viewSearchWindow ? 'dialogs__found_active' : ''}`}>
@@ -59,7 +46,7 @@ const DialogsFound = (props) => {
                         {
                             foundUsers.map(item => {
                                 return (
-                                    <DialogsFoundItem key={item.partnerId} {...dialogsFoundItemProps} item={item} />
+                                    <DialogsFoundItem key={item.partnerId} item={item} />
                                 )
                             })
                         }
@@ -71,7 +58,7 @@ const DialogsFound = (props) => {
                     <ErrorAlert type="warning">Найдите нового собеседника по email</ErrorAlert> 
                 }
 
-                <DialogsNewMessage {...dialogsNewMessageProps} />
+                <DialogsNewMessage />
             </div>
 
         </div>

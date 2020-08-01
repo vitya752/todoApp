@@ -10,7 +10,6 @@ module.exports = (http) => {
     io.sockets.on('connection', (socket) => {
 
         socket.on('disconnect', () => {
-            console.log('Exit')
             if(socket.chat) {
                 deleteAndUpdateOnlineUsers();
             }
@@ -35,9 +34,11 @@ module.exports = (http) => {
         });
 
         socket.on('CHAT:SEND_MESSAGE', async (data) => {
-            console.log('Yes');
             const user = await User.findOne({ _id: data.userId });
             if(user) {
+
+                const date = new Date();
+
                 io.sockets.to('chat').emit('CHAT:ADD_MESSAGE', {
                     senderId: data.userId,
                     author: user.nickname || user.email,
@@ -56,6 +57,42 @@ module.exports = (http) => {
             await OnlineChatUsers.deleteOne({ _id: socket.id });
             io.to('chat').emit('CHAT:DELETE_USER', {id: socket.id});
         };
+
+
+
+
+        socket.on('DIALOGS:JOIN', (data) => {
+            socket.dialog = true;
+            socket.join(data.userId);
+        });
+
+        socket.on('DIALOGS:JOIN_TO_DIALOG', data => {
+            socket.join(data.dialogId);
+        });
+
+        socket.on('DIALOGS:SEND_MESSAGE_TO_DIALOG', (data) => {
+
+            const { dialogId, user, text, partnerId  } = data;
+
+            const message = {
+                senderId: user.userId,
+                author: user.nickname || user.email,
+                avatar: user.avatar,
+                text: text
+            };
+
+            const newDialog = {
+                dialogId,
+                text,
+                date: new Date()
+            };
+
+            io.sockets.to(dialogId).to(partnerId).emit('DIALOGS:ADD_MESSAGE', {
+                message,
+                newDialog
+            });
+
+        });
 
     });
 
