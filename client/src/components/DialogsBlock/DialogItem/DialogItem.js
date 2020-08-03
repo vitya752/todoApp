@@ -18,7 +18,7 @@ const DialogItem = (props) => {
         <li 
             className={`dialogs__item ${item.id === selectedDialog ? 'dialogs__item_active' : ''}`}
             onClick={() => selectDialog(item.id, item.participants)} >
-            <Avatar small="true" avatar={item.avatar} alt={item.email} />
+            <Avatar isDialog={true} isOnline={item.isOnline} small="true" avatar={item.avatar} alt={item.email} />
             <div className="dialog">
                 <div className="d-flex flex-row justify-content-between">
                     <span className="dialog__email">{item.email}</span>    

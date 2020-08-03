@@ -20,6 +20,8 @@ export const _transformDialog = (dialog, userId) => {
         partner = dialog.partner;
     }
 
+    const isOnline = (new Date() - new Date(partner.lastSeen)) < (5 * 60 * 1000); 
+
     return {
         id: dialog._id,
         avatar: partner.avatar,
@@ -29,6 +31,7 @@ export const _transformDialog = (dialog, userId) => {
         date: formatDate({dateFromBase: dialog.lastMessage.createdAt, type: 'dialogs'}),
         my: dialog.lastMessage.author === userId,
         unreadMessages: dialog.unreadMessages,
+        isOnline,
         participants: {
             author: dialog.author,
             partner: dialog.partner

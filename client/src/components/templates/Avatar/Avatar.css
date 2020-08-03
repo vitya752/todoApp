@@ -13,3 +13,19 @@
     width: 30px;
     height: 30px;
 }
+
+.avatar-block_status:after {
+    right: 0;
+    content: '';
+    width: 10px;
+    height: 10px;
+    bottom: -2px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    background-color: #ff5200;
+}
+
+.avatar-block_status_online:after {
+    background-color: #26c626;
+}
