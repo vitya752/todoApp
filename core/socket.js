@@ -70,6 +70,11 @@ module.exports = (http) => {
             socket.join(data.dialogId);
         });
 
+        socket.on('DIALOGS:LEAVE_FROM_DIALOG', data => {
+            socket.dialog = false;
+            socket.leave(data.dialogId);
+        });
+
         socket.on('DIALOGS:SEND_MESSAGE_TO_DIALOG', (data) => {
 
             const { dialogId, user, text, partnerId  } = data;
@@ -78,13 +83,15 @@ module.exports = (http) => {
                 senderId: user.userId,
                 author: user.nickname || user.email,
                 avatar: user.avatar,
-                text: text
+                text: text,
+                date: new Date()
             };
 
             const newDialog = {
                 dialogId,
                 text,
-                date: new Date()
+                date: new Date(),
+                partnerId
             };
 
             io.sockets.to(dialogId).to(partnerId).emit('DIALOGS:ADD_MESSAGE', {
@@ -92,6 +99,15 @@ module.exports = (http) => {
                 newDialog
             });
 
+        });
+        socket.on('DIALOGS:CREATED_DIALOG', data => {
+            io.sockets.to(data.partnerId).emit('DIALOGS:UPDATE_DIALOGS');
+        });
+
+        socket.on('DIALOGS:IS_TYPING', data => {
+            io.sockets.to(data.dialogId).emit('DIALOGS:SET_IS_TYPING', {
+                ...data
+            });
         });
 
     });

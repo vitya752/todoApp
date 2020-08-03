@@ -1,7 +1,6 @@
 .message-input {
     bottom: 0;
     position: sticky;
-    text-align: right;
     background-color: #fff;
     padding: 15px 30px 15px 80px;
 }
@@ -25,6 +24,11 @@
     border-radius: 5px;
     padding-right: 30px;
     border-color: rgba(0, 0, 0, 0.1);
+}
+
+.message-input__button-wrap {
+    display: flex;
+    justify-content: space-between;
 }
 
 .message-input__smiles-toggle {

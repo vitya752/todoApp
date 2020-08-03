@@ -16,7 +16,7 @@ module.exports = (app, io) => {
     app.use('/api/note', noteRouters);
     app.use('/api/settings', settingsRouters);
     app.use('/api/dialogs', dialogsRouters);
-    app.use('/api/messages', messagesRouters);
+    app.use('/api/messages', messagesRouters(io));
     app.use('/api/find', findUsersRouters);
 
     // const User = new UserControllers();

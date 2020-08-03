@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css';
 
 import './MessageInput.css';
 import Avatar from 'components/templates/Avatar/Avatar';
 
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart'
-
-const MessageInput = ({ submitMessage, avatar }) => {
+const MessageInput = ({ submitMessage, declareIsTyping = () => {}, isTyping = {}, avatar }) => {
 
     const [message, setMessage] = useState('');
     const [viewSmiles, setViewSmiles] = useState(false);
 
     const changeHandler = (e) => {
         setMessage(e.target.value);
+        if(declareIsTyping) {
+            declareIsTyping();
+        }
     };
     
     const submitHandler = () => {
@@ -68,10 +70,18 @@ const MessageInput = ({ submitMessage, avatar }) => {
                     ) : null
                 }
             </div>
-            <button 
-                className="btn btn-primary" 
-                onClick={submitHandler}
-                disabled={message === '' ? true : false} >Отправить</button>
+            <div className="message-input__button-wrap">
+                {
+                    isTyping.status && 
+                    <span>{`${isTyping.writersName} пишет...`}</span>
+                }
+                <button 
+                    className="btn btn-primary ml-auto" 
+                    onClick={submitHandler}
+                    disabled={message === '' ? true : false} >
+                    Отправить
+                </button>
+            </div>
         </div>
     );
 };

@@ -29,14 +29,21 @@
     flex-direction: column;
 }
 
-.dialog__message_my-unread {
+.dialog__message {
     margin-right: 5px;
+}
+
+.dialog__message_my-unread,
+.dialog__message_my-read {
+    padding-left: 5px;
+}
+
+.dialog__message_my-unread {
     background-color: #b1bbc5;
 }
 
 .dialog__message_my-read {
-    margin-right: 5px;
-    background-color: #ededed;
+    background-color: #f6e8e8;
 }
 
 .dialog__updated {

@@ -15,7 +15,9 @@ const Dialogs = (props) => {
         messages, 
         userId, 
         submitMessage, 
-        avatar 
+        avatar,
+        declareIsTyping,
+        isTyping
     } = props.messagesProps;
 
     return (
@@ -28,7 +30,11 @@ const Dialogs = (props) => {
                     selectedDialog && messages.length > 0 ? (
                         <>
                             <Messages messages={messages} userId={userId} />
-                            <MessageInput submitMessage={submitMessage} avatar={avatar} />
+                            <MessageInput 
+                                isTyping={isTyping}
+                                declareIsTyping={declareIsTyping} 
+                                submitMessage={submitMessage} 
+                                avatar={avatar} />
                         </>
                     ) : (
                         <div className="messages-plug text-center">

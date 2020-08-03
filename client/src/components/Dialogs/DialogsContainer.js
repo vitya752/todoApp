@@ -10,15 +10,20 @@ import {
     setSearchFieldAC, 
     setSelectedNewIdAC, 
     setFirstMessageAC, 
-    pushToMessagesAC,
+    pushToMessagesThunk,
     setSelectedDialogAC,
+    updateReadstatusAC,
+    setMessagesAC,
+    setIsTypingAC,
     getDialogsThunk,
     getMessagesFromDialogThunk,
     findUsersThunk,
     sendMessageThunk,
-    updateDialogsThunk
+    updateDialogThunk,
+    createDialogThunk
 } from 'redux/dialogsReducer';
 import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 const DialogsContainer = (props) => {
 
@@ -34,17 +39,22 @@ const DialogsContainer = (props) => {
         foundUsers,
         selectedNewId,
         firstMessage,
+        isTyping,
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        pushToMessagesAC,
+        pushToMessagesThunk,
+        updateReadstatusAC,
+        setMessagesAC,
+        setIsTypingAC,
 
         getDialogsThunk,
         getMessagesFromDialogThunk,
         findUsersThunk,
         sendMessageThunk,
-        updateDialogsThunk,
+        updateDialogThunk,
+        createDialogThunk,
 
         messages,
         userId,
@@ -54,7 +64,20 @@ const DialogsContainer = (props) => {
         token
     } = props;
 
+    const createDialog = (selectedNewId, firstMessage) => {
+        createDialogThunk(token, userId, selectedNewId, firstMessage)
+            .then(() => {
+                getDialogsThunk(token, userId);
+                socket.emit('DIALOGS:CREATED_DIALOG', {
+                    partnerId: selectedNewId
+                });
+            });
+    };
+
     const selectDialog = (dialogId, participants) => {
+        socket.emit('DIALOGS:LEAVE_FROM_DIALOG', {
+            dialogId: selectedDialog
+        });
         socket.emit('DIALOGS:JOIN_TO_DIALOG', {
             dialogId
         });
@@ -64,7 +87,7 @@ const DialogsContainer = (props) => {
 
     const submitMessage = (text) => {
 
-        const partnerId = findPartnerId(userId, selectedDialog, dialogs);
+        const partner = getPartner(userId, selectedDialog, dialogs);
         
         const user = {
             userId,
@@ -73,23 +96,44 @@ const DialogsContainer = (props) => {
             email
         };
 
-        sendMessageThunk(token, selectedDialog, text);
-
-        socket.emit('DIALOGS:SEND_MESSAGE_TO_DIALOG', {
-            user,
-            text,
-            dialogId: selectedDialog,
-            partnerId
-        });
-
+        sendMessageThunk(token, selectedDialog, text)
+            .then(() => {
+                socket.emit('DIALOGS:SEND_MESSAGE_TO_DIALOG', {
+                    user,
+                    text,
+                    dialogId: selectedDialog,
+                    partnerId: partner._id
+                });
+            });
     };
 
-    const findPartnerId = (userId, selectedDialog, dialogs) => {        
+    const declareIsTyping = () => {
+        const partner = getPartner(userId, selectedDialog, dialogs);
+        const author = getPartner(partner._id, selectedDialog, dialogs);
+
+        socket.emit('DIALOGS:IS_TYPING', {
+            writersName: author.nickname || author.email,
+            partnerId: partner._id,
+            dialogId: selectedDialog
+        });
+    };
+
+    const setIsTyping = useCallback(data => {
+        if(data.partnerId === userId) {
+            clearInterval(window.setIsTypingTimer);
+            setIsTypingAC({ status: true, writersName: data.writersName });
+            window.setIsTypingTimer = setTimeout(() => {
+                setIsTypingAC({ status: false, writersName: '' });
+            }, 2000);
+        }
+    }, [setIsTypingAC, userId]);
+
+    const getPartner = (userId, selectedDialog, dialogs) => {        
         const dialog = dialogs.filter(item => item.id === selectedDialog);
         const participants = dialog[0].participants;
 
-        if(participants.author._id === userId) return participants.partner._id;
-        else return participants.author._id;
+        if(participants.author._id === userId) return participants.partner;
+        else return participants.author;
     };
 
     useEffect(() => {
@@ -97,20 +141,36 @@ const DialogsContainer = (props) => {
         socket.emit('DIALOGS:JOIN', { userId });
 
         return () => {
+            setMessagesAC([]);
+            setSelectedDialogAC('');
             socket.disconnect();
         };
 
-    }, [getDialogsThunk, token, userId, socket]);
+    }, [getDialogsThunk, setMessagesAC, setSelectedDialogAC, token, userId, socket]);
     
     useEffect(() => {
         socket.on('DIALOGS:ADD_MESSAGE', data => {
-            pushToMessagesAC(data.message);
-            updateDialogsThunk(data.newDialog);
+            pushToMessagesThunk(data.message);
+            // updateDialogThunk(data.newDialog, userId);
+            getDialogsThunk(token, userId);
         });
 
-    }, [pushToMessagesAC, updateDialogsThunk, socket]);
+        socket.on('DIALOGS:MESSAGES_READED', data => {
+            updateReadstatusAC(data.dialogId);
+        });
+
+        socket.on('DIALOGS:UPDATE_DIALOGS', () => {
+            getDialogsThunk(token, userId);
+        });
+
+        socket.on('DIALOGS:SET_IS_TYPING', data => {
+            setIsTyping(data);
+        });
+
+    }, [pushToMessagesThunk, getDialogsThunk, updateDialogThunk, updateReadstatusAC, setIsTyping, token, userId, socket]);
 
     const dialogsProps = {
+        userId,
         token,
         dialogs,
         loading,
@@ -120,11 +180,13 @@ const DialogsContainer = (props) => {
         foundUsers,
         selectedNewId,
         firstMessage,
+        isTyping,
         setSearchFieldAC,
         setViewSearchWindowAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
         findUsersThunk,
+        createDialog,
 
         selectDialog
     };
@@ -133,7 +195,9 @@ const DialogsContainer = (props) => {
         userId,
         avatar,
         messages,
-        submitMessage
+        submitMessage,
+        declareIsTyping,
+        isTyping
     };
 
     return (
@@ -154,6 +218,7 @@ const mapStateToProps = state => {
         dialogs: state.dialogsPage.dialogs,
         viewSearchWindow: state.dialogsPage.viewSearchWindow,
         selectedDialog: state.dialogsPage.selectedDialog,
+        isTyping: state.dialogsPage.isTyping,
         
         messages: state.dialogsPage.messages,
         userId: state.auth.userId,
@@ -170,14 +235,18 @@ const mapDispatchToProps = dispatch => {
         setSearchFieldAC,
         setSelectedNewIdAC,
         setFirstMessageAC,
-        pushToMessagesAC,
+        pushToMessagesThunk,
         setSelectedDialogAC,
+        updateReadstatusAC,
+        setMessagesAC,
+        setIsTypingAC,
 
         getDialogsThunk,
         getMessagesFromDialogThunk,
         findUsersThunk,
         sendMessageThunk,
-        updateDialogsThunk
+        updateDialogThunk,
+        createDialogThunk
 
     }, dispatch);
 };

@@ -24,7 +24,11 @@ const DialogItem = (props) => {
                     <span className="dialog__email">{item.email}</span>    
                     <span className="dialog__updated">{item.date}</span>
                 </div>
-                <span className={`dialog__message ${item.my ? 'dialog__message_my-unread' : ''}`}>{`${item.text.substring(0, 25)}...`}</span>
+                <span className={`dialog__message ${item.my ? item.unreadMessages ? 'dialog__message_my-unread' : 'dialog__message_my-read' : ''}`}>
+                    {
+                        item.text.length > 20 ? `${item.text.substring(0, 20)}...` : item.text
+                    }
+                </span>
             </div>
             {
                 item.unreadMessages > 0 && !item.my && (<div className="dialog__new-messages">

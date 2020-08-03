@@ -7,9 +7,10 @@ const DialogsNewMessage = () => {
     const {
         firstMessage,
         selectedNewId,
-        setFirstMessageAC
+        setFirstMessageAC,
+        createDialog
     } = useContext(DialogsContext);
-
+    
     return (
         <div className="found__new-message">
             <textarea 
@@ -19,6 +20,7 @@ const DialogsNewMessage = () => {
                 onChange={(e) => { setFirstMessageAC(e.target.value) }}
                 disabled={selectedNewId ? false : true}></textarea>
             <button
+                onClick={() => createDialog(selectedNewId, firstMessage)}
                 disabled={selectedNewId && firstMessage.length > 0 ? false : true}
                 className="dialogs__button text-center" 
                 type="button">

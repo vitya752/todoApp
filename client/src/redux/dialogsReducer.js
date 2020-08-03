@@ -11,10 +11,12 @@ const SET_SELECTED_NEW_ID = 'SET_CHECKED_NEW_ID';
 const SET_FIRST_MESSAGE = 'SET_FIRST_MESSAGE';
 const SET_SELECTED_DIALOG = 'SET_SELECTED_DIALOG';
 const SET_DIALOGS = 'SET_DIALOGS';
-const UPDATE_DIALOGS = 'UPDATE_DIALOGS';
+const UPDATE_DIALOG = 'UPDATE_DIALOG';
 const SET_FOUND_USERS = 'SET_FOUND_USERS';
 const SET_MESSAGES = 'SET_MESSAGES';
 const PUSH_TO_MESSAGES = 'PUSH_TO_MESSAGES';
+const UPDATE_READSTATUS = 'UPDATE_READSTATUS';
+const SET_IS_TYPING = 'SET_IS_TYPING';
 
 const initialState = {
     loading: false,
@@ -25,7 +27,11 @@ const initialState = {
     selectedDialog: null,
     dialogs: [],
     foundUsers: [],
-    messages: []
+    messages: [],
+    isTyping: {
+        status: false,
+        writersName: ''
+    }
 };
 
 const reducer = (state = initialState, action) => {
@@ -65,7 +71,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 dialogs: action.dialogs
             }
-        case UPDATE_DIALOGS: {
+        case UPDATE_DIALOG: {
             const idx = state.dialogs.findIndex(item => item.id === action.dialog.id);
             const dialog = {
                 ...state.dialogs[idx],
@@ -84,8 +90,7 @@ const reducer = (state = initialState, action) => {
                 }
             }
 
-            break;
-
+            return state;
         }
         case SET_FOUND_USERS:
             return {
@@ -104,6 +109,27 @@ const reducer = (state = initialState, action) => {
                     ...state.messages,
                     action.message
                 ]
+            }
+        case UPDATE_READSTATUS: {
+            const idx = state.dialogs.findIndex(item => item.id === action.payload);
+            const dialogs = [...state.dialogs];
+
+            if(idx !== -1) {
+                dialogs[idx].unreadMessages = 0;
+                return {
+                    ...state,
+                    dialogs
+                }
+            }
+            return state;
+        }
+        case SET_IS_TYPING: 
+            return {
+                ...state,
+                isTyping: {
+                    status: action.isTyping.status,
+                    writersName: action.isTyping.writersName
+                }
             }
         default:
             return state;
@@ -159,9 +185,9 @@ export const setDialogsAC = payload => {
     }
 };
 
-export const updateDialogsAC = payload => {
+export const updateDialogAC = payload => {
     return {
-        type: UPDATE_DIALOGS,
+        type: UPDATE_DIALOG,
         dialog: payload
     }
 };
@@ -186,6 +212,38 @@ export const pushToMessagesAC = payload => {
         message: payload
     }
 };
+
+export const updateReadstatusAC = payload => {
+    return {
+        type: UPDATE_READSTATUS,
+        payload
+    }
+};
+
+export const setIsTypingAC = payload => {
+    return {
+        type: SET_IS_TYPING,
+        isTyping: payload
+    }
+}
+
+export const createDialogThunk = (token, userId, partnerId, text) => {
+    return async dispatch => {
+        try {
+            dispatch(setLoadingAC(true));
+            const api = dialogsApi(token);
+            await api.createDialog(partnerId, text);
+            dispatch(setLoadingAC(false));
+            dispatch(setViewSearchWindowAC(false));
+            dispatch(setSelectedNewIdAC(''));
+            dispatch(setSearchFieldAC(''));
+            dispatch(setFirstMessageAC(''));
+            dispatch(setFoundUsersAC([]));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+}
 
 export const getDialogsThunk = (token, userId) => {
     return async dispatch => {
@@ -232,22 +290,42 @@ export const sendMessageThunk = (token, dialogId, text, socket) => {
     }
 };
 
-export const updateDialogsThunk = (newDialog) => {
-    return async dispatch => {
+export const updateDialogThunk = (newDialog, userId) => {
+    return dispatch => {
         try {
-            const { dialogId, text, date } = newDialog;
+            const { dialogId, text, date, partnerId } = newDialog;
             const result = {
                 id: dialogId,
                 text: text,
                 fulldate: date,
+                my: userId !== partnerId,
                 date: formatDate({dateFromBase: date, type: 'dialogs'})
             };
-            dispatch(updateDialogsAC(result));
+            if(userId !== partnerId) {
+                result.unreadMessages = 1;
+            }
+            dispatch(updateDialogAC(result));
         } catch(e) {
             requestError(setLoadingAC(false), e, dispatch);
         }
     };
 };
+
+export const pushToMessagesThunk = (message) => {
+    return dispatch => {
+        try {
+            const { date } = message;
+            const newMessage = {
+                ...message,
+                fullDate: date,
+                date: formatDate({dateFromBase: date, type: 'messages'})
+            };
+            dispatch(pushToMessagesAC(newMessage));
+        } catch(e) {
+            requestError(setLoadingAC(false), e, dispatch);
+        }
+    };
+}
 
 export const findUsersThunk = (token, reqEmail) => {
     return async dispatch => {

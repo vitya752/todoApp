@@ -6,11 +6,6 @@ const schema = new Schema({
         ref: 'Dialog',
         required: true
     },
-    read: {
-        type: Boolean,
-        default: true,
-        required: true
-    },
     text: String,
     author: {
         type: Schema.Types.ObjectId,

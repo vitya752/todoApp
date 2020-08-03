@@ -14,8 +14,8 @@ const dialogsApi = (token) => {
         return await template.get(`${url}`);
     };
 
-    const createDialog = async partnerId => {
-        return await template.post(`${url}`, {partnerId});
+    const createDialog = async (partnerId, text) => {
+        return await template.post(`${url}`, {partnerId, text});
     };
 
     return {
