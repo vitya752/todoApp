@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import AuthForm from './AuthForm';
-import { requestLoginThunk, requestRegisterThunk, setAuthFormAC } from 'redux/authReducer';
+import { requestLoginThunk, requestRegisterThunk, setAuthFormAC, cheackAuthThunk } from 'redux/authReducer';
+import { useEffect } from 'react';
 
 const AuthFormContainer = (props) => {
 
@@ -11,10 +12,15 @@ const AuthFormContainer = (props) => {
         fetching, 
         requestLoginThunk, 
         requestRegisterThunk, 
+        cheackAuthThunk,
         setAuthFormAC, 
         fieldEmail, 
         fieldPass
     } = props;
+
+    useEffect(() => {
+        cheackAuthThunk();
+    }, [cheackAuthThunk]);
 
     const login = () => {
         requestLoginThunk(fieldEmail, fieldPass);
@@ -37,7 +43,8 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         requestLoginThunk,
         requestRegisterThunk,
-        setAuthFormAC
+        setAuthFormAC,
+        cheackAuthThunk
     }, dispatch);
 };
 

@@ -1,0 +1,22 @@
+.dialogs-toggler {
+    display: none;
+}
+
+.messages-wrapper {
+    display: flex;
+    margin: 0 auto;
+    /* max-width: 768px; */
+    position: relative;
+    flex-direction: column;
+    /* height: calc(100vh - 59px); */
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 991.98px) {
+    .dialogs-toggler {
+        display: block;
+    }
+    .messages-wrapper {
+        height: calc(100vh - 95px);
+    }
+}

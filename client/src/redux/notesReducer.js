@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 
+import { requestError } from 'utils/requestError';
 import { notesApi } from "api";
 
 const FETCHING = 'FETCHING';
@@ -184,11 +185,6 @@ export const requestDeleteNoteThunk = (token, noteId) => {
             requestError(sendingAC(false), e, dispatch);
         }
     };
-};
-
-const requestError = (action, e, dispatch) => {
-    dispatch(action);
-    toast(e.response.data.message);
 };
 
 const updateNote = (state, note, noteId) => {

@@ -46,3 +46,14 @@
     position: static;
     margin-right: 10px;
 }
+
+@media screen and (max-width: 574.98px) {
+    .online-users {
+        bottom: 50px;
+        background-color: #000;
+    }
+    .online-users__switch,
+    .online-users__list {
+        width: 100%;
+    }
+}

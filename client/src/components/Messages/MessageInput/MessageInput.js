@@ -73,7 +73,7 @@ const MessageInput = ({ submitMessage, declareIsTyping = () => {}, isTyping = {}
             <div className="message-input__button-wrap">
                 {
                     isTyping.status && 
-                    <span>{`${isTyping.writersName} пишет...`}</span>
+                    <span className="message-input__typing">{`${isTyping.writersName} пишет`}</span>
                 }
                 <button 
                     className="btn btn-primary ml-auto" 

@@ -12,9 +12,14 @@ const authApi = () => {
         return await axios.post(`${url}/register`, {email, password});
     };
 
+    const check = async (token) => {
+        return await axios.post(`${url}/check`, {token});
+    };
+
     return {
         login,
-        register
+        register,
+        check
     }
 };
 

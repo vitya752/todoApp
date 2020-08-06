@@ -100,6 +100,7 @@ module.exports = (http) => {
             });
 
         });
+
         socket.on('DIALOGS:CREATED_DIALOG', data => {
             io.sockets.to(data.partnerId).emit('DIALOGS:UPDATE_DIALOGS');
         });

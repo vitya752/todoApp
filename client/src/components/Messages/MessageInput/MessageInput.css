@@ -31,6 +31,11 @@
     justify-content: space-between;
 }
 
+.message-input__typing:after {
+    content: '.';
+    animation: 1s ease-in 1s infinite typing-animate;
+}
+
 .message-input__smiles-toggle {
     top: 3px;
     right: 0;
@@ -67,4 +72,27 @@
 
 .emoji-mart-scroll {
     overflow-x: hidden;
+}
+
+@media screen and (max-width: 574.98px) { 
+    .message-input__smiles {
+        bottom: 30%;
+        right: -50px;
+        transform: scale(.7);
+    }
+}
+
+@keyframes typing-animate {
+    0% {
+        content: '';
+    }
+    33% {
+        content: '.';
+    }
+    66% {
+        content: '..';
+    }
+    99% {
+        content: '...';
+    }
 }

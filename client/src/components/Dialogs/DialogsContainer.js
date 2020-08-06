@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -22,8 +22,7 @@ import {
     updateDialogThunk,
     createDialogThunk
 } from 'redux/dialogsReducer';
-import { useEffect } from 'react';
-import { useCallback } from 'react';
+import { getPartner } from 'utils/getPartner';
 
 const DialogsContainer = (props) => {
 
@@ -68,6 +67,8 @@ const DialogsContainer = (props) => {
         createDialogThunk(token, userId, selectedNewId, firstMessage)
             .then(() => {
                 getDialogsThunk(token, userId);
+                setMessagesAC([]);
+                setSelectedDialogAC('');
                 socket.emit('DIALOGS:CREATED_DIALOG', {
                     partnerId: selectedNewId
                 });
@@ -128,14 +129,6 @@ const DialogsContainer = (props) => {
         }
     }, [setIsTypingAC, userId]);
 
-    const getPartner = (userId, selectedDialog, dialogs) => {        
-        const dialog = dialogs.filter(item => item.id === selectedDialog);
-        const participants = dialog[0].participants;
-
-        if(participants.author._id === userId) return participants.partner;
-        else return participants.author;
-    };
-
     useEffect(() => {
         getDialogsThunk(token, userId);
         socket.emit('DIALOGS:JOIN', { userId });
@@ -167,7 +160,7 @@ const DialogsContainer = (props) => {
             setIsTyping(data);
         });
 
-    }, [pushToMessagesThunk, getDialogsThunk, updateDialogThunk, updateReadstatusAC, setIsTyping, token, userId, socket]);
+    }, [pushToMessagesThunk, getDialogsThunk, updateDialogThunk, updateReadstatusAC, setIsTyping, setMessagesAC, token, userId, socket]);
 
     const dialogsProps = {
         userId,

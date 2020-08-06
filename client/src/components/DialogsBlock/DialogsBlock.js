@@ -8,12 +8,12 @@ import DialogItem from './DialogItem/DialogItem';
 import { DialogsContext } from 'context';
 
 
-const Dialogs = () => {
+const Dialogs = ({ dialogWindowStatus }) => {
     
     const { dialogs, loading } = useContext(DialogsContext);
 
     return (
-        <div className="dialogs" >
+        <div className={`dialogs ${dialogWindowStatus ? 'dialogs_mobile-active' : ''}`} >
             <DialogsSearch />
             {
                 dialogs.length ?

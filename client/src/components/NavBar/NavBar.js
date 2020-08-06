@@ -5,10 +5,12 @@ import { bindActionCreators } from 'redux';
 
 import './NavBar.css';
 import { setAuthAC } from 'redux/authReducer';
+import { useLocaleStorage } from 'hooks/useLocalStorage';
 
 const NavBar = ({ setAuthAC }) => {
 
     const [menuStatus, setMenuStatus] = useState(false);
+    const storage = useLocaleStorage();
 
     const toggleMenu = () => {
         setMenuStatus(!menuStatus);
@@ -16,6 +18,7 @@ const NavBar = ({ setAuthAC }) => {
 
     const logoutHandler = (e) => {
         e.preventDefault();
+        storage.deleteUser();
         setAuthAC({});
     }
 

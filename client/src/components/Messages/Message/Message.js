@@ -17,7 +17,7 @@ const Message = ({ item, userId }) => {
                     {item.text}
                 </div>
             </div>
-            <span>{item.date}</span>
+            <span className="message_date">{item.date}</span>
         </div>
     )
 };

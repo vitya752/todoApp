@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 
 import { authApi, settingsApi } from "api";
+import { requestError } from 'utils/requestError';
+import { useLocaleStorage } from "hooks/useLocalStorage";
 
 const FETCHING = 'FETCHING';
 const SET_AUTH = 'SET_AUTH';
@@ -119,14 +121,15 @@ export const requestLoginThunk = (email, pass) => {
             const data = await api.login(email, pass);
             if(data.statusText === 'OK') {
                 const {userId, email, nickname, avatar, token, message} = data.data;
+                const storage = useLocaleStorage();
+                storage.saveUser(data.data);
                 dispatch(setAuthAC({userId, nickname, avatar, email, token}));
                 dispatch(fetchingAC(false));
                 dispatch(clearAuthFormAC());
                 toast(message);
             }
         } catch(e) {
-            dispatch(fetchingAC(false));
-            toast(e.response.data.message);
+            requestError(fetchingAC(false), e, dispatch);
         }
     }
 };
@@ -142,8 +145,7 @@ export const requestRegisterThunk = (email, pass) => {
                 dispatch(fetchingAC(false));
             }
         } catch(e) {
-            dispatch(fetchingAC(false));
-            toast(e.response.data.message);
+            requestError(fetchingAC(false), e, dispatch);
         }
     }
 };
@@ -161,10 +163,11 @@ export const deleteAccThunk = ({token}) => {
                 dispatch(setAuthAC({}));
                 dispatch(setAuthFormAC('email', ''));
                 dispatch(setAuthFormAC('pass', ''));
+                const storage = useLocaleStorage();
+                storage.deleteUser();
             }
         } catch(e) {
-            dispatch(fetchingAC(false));
-            // toast(e.response.data.message);
+            requestError(fetchingAC(false), e, dispatch);
         }
     };
 };
@@ -181,8 +184,29 @@ export const updateSettingsThunk = ({token, nickname, avatar}) => {
                 toast(message);
             }
         } catch(e) {
-            dispatch(fetchingAC(false));
-            toast(e.response.data.message);
+            requestError(fetchingAC(false), e, dispatch);
+        }
+    };
+};
+
+export const cheackAuthThunk = () => {
+    return async dispatch => {
+        try {
+            const storage = useLocaleStorage();
+            const user = storage.getUser();
+            if(user && user.token) {
+                const api = authApi();
+                const data = await api.check(user.token);
+                if(data.statusText === 'Accepted') {
+                    dispatch(setAuthAC(user));
+                } else {
+                    storage.deleteUser();
+                }
+            } else {
+                dispatch(setAuthAC({}));
+            }
+        } catch(e) {
+            requestError(fetchingAC(false), e, dispatch);
         }
     };
 };

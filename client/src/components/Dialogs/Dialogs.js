@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+
+import './Dialogs.css';
 
 import DialogsBlock from 'components/DialogsBlock/DialogsBlock';
 import Messages from 'components/Messages/Messages';
@@ -11,6 +13,12 @@ const Dialogs = (props) => {
 
     const { loading, selectedDialog } = useContext(DialogsContext);
 
+    const [dialogWindowStatus, setDialogWindowStatus] = useState(false);
+
+    const toggleMenu = () => {
+        setDialogWindowStatus(!dialogWindowStatus);
+    };
+
     const {
         messages, 
         userId, 
@@ -22,10 +30,18 @@ const Dialogs = (props) => {
 
     return (
         <div className="row">
-            <div className="col-3 pl-0 pr-0">
-                <DialogsBlock />
+            <div className="col-12 col-lg-3 pl-0 pr-0">
+                <button 
+                    className="btn btn-primary w-100 dialogs-toggler"
+                    onClick={toggleMenu}
+                    >
+                    {
+                        dialogWindowStatus ? (selectedDialog && selectedDialog.length > 0 ? 'Скрыть список (диалог открыт)' : 'Скрыть список') : 'Список диалогов'
+                    }
+                </button>
+                <DialogsBlock dialogWindowStatus={dialogWindowStatus} />
             </div>
-            <div className="col-9 pl-2 m-0 messages-wrapper w-auto">
+            <div className="col-12 col-lg-9 pl-0 pr-0 pl-lg-2 m-0 messages-wrapper w-auto">
                 {
                     selectedDialog && messages.length > 0 ? (
                         <>

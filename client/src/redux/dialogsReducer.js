@@ -1,8 +1,7 @@
-import { toast } from "react-toastify";
-
 import { dialogsApi, messagesApi, usersApi } from "api";
 import { _transformDialogs, _transformMessages, _transformFoundUsers } from 'utils/transformData';
 import { formatDate } from "utils/formatDate";
+import { requestError } from 'utils/requestError';
 
 const SET_LOADING = 'SET_LOADING';
 const SET_VIEW_SEARCH_WINDOW = 'SET_VIEW_SEARCH_WINDOW';
@@ -333,7 +332,7 @@ export const findUsersThunk = (token, reqEmail) => {
             dispatch(setFoundUsersAC([]));
             dispatch(setLoadingAC(true));
             const api = usersApi(token);
-            const data = await api.findUsers(reqEmail);
+            const data = await api.findUsers(reqEmail.toLowerCase());
             const transformFoundUsers = _transformFoundUsers({
                 foundUsers: data.data.foundUsers
             });
@@ -343,12 +342,6 @@ export const findUsersThunk = (token, reqEmail) => {
             requestError(setLoadingAC(false), e, dispatch);
         }
     };
-};
-
-
-const requestError = (action, e, dispatch) => {
-    dispatch(action);
-    toast(e.response.data.message);
 };
 
 export default reducer;
