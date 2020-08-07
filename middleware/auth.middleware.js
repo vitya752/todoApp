@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
     }
 
     if(
-        req.path === "/" ||
+        req.path === "/build/static" ||
         req.path === "/api/auth/register" ||
         req.path === "/api/auth/login" ||
         req.path === "/api/auth/check"
