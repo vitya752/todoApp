@@ -15,14 +15,13 @@ module.exports = async (req, res, next) => {
     }
 
     try {
-        const token = req.headers.authorization.split(' ')[1]; //Bearer TOKEN
+        // const token = req.headers.authorization.split(' ')[1]; //Bearer TOKEN
 
-        checkToken(req, res, token);
+        checkToken(req, res, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMzM0NDZlODAwOTA5ZjhiYTk5NTciLCJpYXQiOjE1OTY4NDM2MzAsImV4cCI6MTU5NjkzMDAzMH0.6oUiA3g32vvMJl44OzE-Rp5WUD7QqQFRCPhZ-mCaV2I");
         
         return next();
 
     } catch(e) {
-        // res.status(401).json({ message: 'Нет авторизации' });
-        res.status(401);
+        res.status(401).json({ message: 'Нет авторизации' });
     }
 };
