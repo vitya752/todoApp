@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
     }
 
     if(
-        req.path === "/build/static" ||
+        // req.path === "/build/static" ||
         req.path === "/api/auth/register" ||
         req.path === "/api/auth/login" ||
         req.path === "/api/auth/check"
@@ -22,6 +22,7 @@ module.exports = async (req, res, next) => {
         return next();
 
     } catch(e) {
-        res.status(401).json({ message: 'Нет авторизации' });
+        // res.status(401).json({ message: 'Нет авторизации' });
+        res.status(401);
     }
 };
