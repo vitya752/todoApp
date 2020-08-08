@@ -1,7 +1,7 @@
 import socketIOClient from "socket.io-client";
 
 const useSocket = () => {
-    return socketIOClient('https://minisocialnetw.herokuapp.com/');
+    return socketIOClient(window.location.origin.replace("3000", process.env.PORT));
 };
 
 export {
