@@ -30,62 +30,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// router.post('/', async (req, res) => {
-//     try {
-//         const { userId } = req.user;
-//         const { partnerId } = req.body;
-        
-//         const dialog = await Dialog.findOne()
-//                                     .or( [{ author: userId, partner: partnerId }, { author: partnerId, partner: userId }] );
-
-//         if(dialog) {
-//             return res.status(403).json({
-//                 status: 'error',
-//                 message: 'Такой диалог уже существует',
-//             });
-//         } else {
-//             const dialog = new Dialog({
-//                 author: userId,
-//                 partner: partnerId
-//             });
-            
-//             const { _id } = dialog;
-//             const { text } = req.body;
-//             const message = new Message({
-//                 text,
-//                 dialogId: _id,
-//                 author: userId
-//             });
-
-//             message 
-//                 .save()
-//                 .then(messageObj => {
-//                     const { _id: messageId } = messageObj;
-//                     dialog.lastMessage = messageId;
-//                     dialog.unreadMessages = 1;
-//                     dialog
-//                         .save()
-//                         .then( async () => {
-
-//                             const response = await Dialog.findOne({_id})
-//                                                     .populate(['author', 'partner'])
-//                                                     .populate('lastMessage');
-
-//                             res.json({
-//                                 dialog: response
-//                             });
-//                         })
-//                 })
-//                 .catch(e => {
-//                     res.json(e);
-//                 });
-//         }
-
-//     } catch(e) {
-//         res.status(500).json({ message: 'Что-то пошло не так, попробуйте еще раз' });
-//     }
-// });
-
 router.post('/', async (req, res) => {
     try {
         const { userId } = req.user;
