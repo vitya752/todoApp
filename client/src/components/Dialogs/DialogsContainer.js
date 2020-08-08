@@ -19,7 +19,6 @@ import {
     getMessagesFromDialogThunk,
     findUsersThunk,
     sendMessageThunk,
-    updateDialogThunk,
     createDialogThunk
 } from 'redux/dialogsReducer';
 import { getPartner } from 'utils/getPartner';
@@ -52,7 +51,6 @@ const DialogsContainer = (props) => {
         getMessagesFromDialogThunk,
         findUsersThunk,
         sendMessageThunk,
-        updateDialogThunk,
         createDialogThunk,
 
         messages,
@@ -108,6 +106,19 @@ const DialogsContainer = (props) => {
             });
     };
 
+    const addMessage = useCallback(data => {
+        pushToMessagesThunk(data.message);
+        getDialogsThunk(token, userId);
+    }, [getDialogsThunk, pushToMessagesThunk, token, userId]);
+
+    const messagesReaded = useCallback(data => {
+        updateReadstatusAC(data.dialogId);
+    }, [updateReadstatusAC]);
+
+    const updateDialogs = useCallback(() => {
+        getDialogsThunk(token, userId);
+    }, [getDialogsThunk, token, userId]);
+
     const declareIsTyping = () => {
         const partner = getPartner(userId, selectedDialog, dialogs);
         const author = getPartner(partner._id, selectedDialog, dialogs);
@@ -142,25 +153,20 @@ const DialogsContainer = (props) => {
     }, [getDialogsThunk, setMessagesAC, setSelectedDialogAC, token, userId, socket]);
     
     useEffect(() => {
-        socket.on('DIALOGS:ADD_MESSAGE', data => {
-            pushToMessagesThunk(data.message);
-            // updateDialogThunk(data.newDialog, userId);
-            getDialogsThunk(token, userId);
-        });
 
-        socket.on('DIALOGS:MESSAGES_READED', data => {
-            updateReadstatusAC(data.dialogId);
-        });
+        socket.on('DIALOGS:ADD_MESSAGE', addMessage);
+        socket.on('DIALOGS:MESSAGES_READED', messagesReaded);
+        socket.on('DIALOGS:UPDATE_DIALOGS', updateDialogs);
+        socket.on('DIALOGS:SET_IS_TYPING', setIsTyping);
 
-        socket.on('DIALOGS:UPDATE_DIALOGS', () => {
-            getDialogsThunk(token, userId);
-        });
+        return () => {
+            socket.off('DIALOGS:ADD_MESSAGE', addMessage);
+            socket.off('DIALOGS:MESSAGES_READED', messagesReaded);
+            socket.off('DIALOGS:UPDATE_DIALOGS', updateDialogs);
+            socket.off('DIALOGS:SET_IS_TYPING', setIsTyping);
+        };
 
-        socket.on('DIALOGS:SET_IS_TYPING', data => {
-            setIsTyping(data);
-        });
-
-    }, [pushToMessagesThunk, getDialogsThunk, updateDialogThunk, updateReadstatusAC, setIsTyping, setMessagesAC, token, userId, socket]);
+    }, [setIsTyping, addMessage, messagesReaded, updateDialogs, socket]);
 
     const dialogsProps = {
         userId,
@@ -238,7 +244,6 @@ const mapDispatchToProps = dispatch => {
         getMessagesFromDialogThunk,
         findUsersThunk,
         sendMessageThunk,
-        updateDialogThunk,
         createDialogThunk
 
     }, dispatch);
