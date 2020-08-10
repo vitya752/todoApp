@@ -120,13 +120,12 @@ export const requestLoginThunk = (email, pass) => {
             const api = authApi();
             const data = await api.login(email, pass);
             if(data.statusText === 'OK') {
-                const {userId, email, nickname, avatar, token, message} = data.data;
+                const {userId, email, nickname, avatar, token} = data.data;
                 const storage = useLocaleStorage();
                 storage.saveUser(data.data);
                 dispatch(setAuthAC({userId, nickname, avatar, email, token}));
                 dispatch(fetchingAC(false));
                 dispatch(clearAuthFormAC());
-                toast(message);
             }
         } catch(e) {
             requestError(fetchingAC(false), e, dispatch);

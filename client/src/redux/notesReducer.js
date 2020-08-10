@@ -118,9 +118,6 @@ export const requestNotesThunk = (token) => {
             if(data.statusText === 'OK') {
                 dispatch(fetchingAC(false));
                 dispatch(setNotesAC(data.data.notes));
-                toast(data.data.message);
-            } else {
-                toast('Ошибка!');
             }
         } catch(e) {
             requestError(fetchingAC(false), e, dispatch);
@@ -138,9 +135,6 @@ export const requestAddNoteThunk = (token, text) => {
                 dispatch(requestNotesThunk(token));
                 dispatch(setNewNoteAC(''));
                 dispatch(sendingAC(false));
-                toast(data.data.message);
-            } else {
-                toast('Ошибка!');
             }
         } catch(e) {
             requestError(sendingAC(false), e, dispatch);
@@ -157,9 +151,6 @@ export const requestUpdateNoteThunk = (token, noteId, important, done) => {
             if(data.statusText === 'Accepted') {
                 dispatch(updateNoteAC(data.data.note, noteId));
                 dispatch(sendingAC(false));
-                toast(data.data.message);
-            } else {
-                toast('Ошибка!');
             }
         } catch(e) {
             requestError(sendingAC(false), e, dispatch);
@@ -177,9 +168,6 @@ export const requestDeleteNoteThunk = (token, noteId) => {
             if(data.statusText === 'Accepted') {
                 dispatch(updateNoteAC(null, noteId));
                 dispatch(sendingAC(false));
-                toast(data.data.message);
-            } else {
-                toast('Ошибка!');
             }
         } catch(e) {
             requestError(sendingAC(false), e, dispatch);
